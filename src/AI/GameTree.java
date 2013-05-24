@@ -54,7 +54,7 @@ public class GameTree {
         {
             colouredNode = Util.gamePiece_b;
         }
-        int newLevelsDeep = levelsDeep--;
+        int newLevelsDeep = levelsDeep-1;
         
         for(int i = 0; i < boardWidth; i++)
         {
