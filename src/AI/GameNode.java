@@ -26,8 +26,8 @@ public class GameNode {
     }
     
     // Adds a piece at xPos to the parent's board state
-    public GameNode(byte[][] parentBoard, int xPos, byte piece){
-        gameBoard = parentBoard;
+    public GameNode(GameNode currNode, int xPos, byte piece){
+        gameBoard = currNode.gameBoard;
         
         for (int y = 0; y < gameBoard[xPos].length; y++) {
             

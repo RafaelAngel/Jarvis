@@ -27,14 +27,38 @@ public class Jarvis {
         Util util = new Util();
         
         String input = getStandardInput();        
-        GameNode parentNode = createGameTree(input);
+        GameTree gameTree = createGameTree(input);
+        
+        Move winningMove = findOptimalMove(gameTree.head);
+        
         
         IsWin isWin = new IsWin();                    
-        int score = isWin.winFunction(parentNode, last_col);
+        int score = isWin.winFunction(gameTree.head, last_col);
         
         System.out.println(score);    
     }
     
+    private static Move findOptimalMove(GameNode gameNodeHead) {
+        
+        GameNode bestGameBoard = gameNodeHead.children[4];
+        int highestScore = 0;
+        
+        for(GameNode gameNode: gameNodeHead.children){            
+            if(highestScore < gameNode.calculateChildrensScore()){
+                highestScore = gameNode.calculateChildrensScore();
+                bestGameBoard = gameNode;
+            }
+        }
+        
+        if(highestScore == 0){
+            //make sure we return a valid move
+        }
+        
+        return new Move(bestGameBoard); //No win found = PANIC
+    }
+    
+    
+
     private static GameTree createGameTree(String input){
         
         StringTokenizer tokenizer = new StringTokenizer(input, ",");
@@ -151,5 +175,14 @@ public class Jarvis {
 
         String result = new String(bout.toByteArray());
         return result;
+    }
+    
+    public static class Move{
+        public Move(GameNode gameNode) {
+            column = gameNode.column;
+            gamePiece = gameNode.gamePiece;
+        }
+        int column;
+        byte gamePiece;
     }
 }
