@@ -31,8 +31,8 @@ public class GameTree {
         head = new GameNode(gameData);
         current = head;
         
-        boardWidth = gameData.length;
-        boardHeight = gameData[0].length;
+        boardWidth = gameData.length - 6;
+        boardHeight = gameData[0].length - 6;
     }
    
     
@@ -64,8 +64,8 @@ public class GameTree {
             }
             GenerateChildren(currNode.children[i],newLevelsDeep,!isJarvisTurn);
             //add space
-            if(currNode.children[(boardWidth)*2 -i] ==null){
-                currNode.children[(boardWidth)*2 -i]  = new GameNode(currNode, i, colouredNode);
+            if(currNode.children[(boardWidth)*2 - i - 1] ==null){
+                currNode.children[(boardWidth)*2 - i - 1]  = new GameNode(currNode, i, colouredNode);
             }
             GenerateChildren(currNode.children[i],newLevelsDeep,!isJarvisTurn);
             

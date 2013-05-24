@@ -15,7 +15,7 @@ public class GameNode {
     public GameNode[] children;
     public byte gamePiece;
     public int column;
-    public int score;
+    public int score = 0;
     public int childrenScore;
 
     // Initializes gameNode to current board state, used for creating head of gameTree
@@ -76,6 +76,9 @@ public class GameNode {
             return score;
         }        
         for(GameNode gameNode: children){
+            if(gameNode == null){
+                continue;
+            }
             totalScore += gameNode.calculateChildrensScore();
         }
         return totalScore;

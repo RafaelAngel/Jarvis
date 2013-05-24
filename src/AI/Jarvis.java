@@ -36,7 +36,7 @@ public class Jarvis {
         //IsWin isWin = new IsWin();                    
         //int score = isWin.winFunction(gameTree.head, last_col);
         
-        System.out.println(winningMove.column + " " + winningMove.gamePiece);    
+        System.out.println("(" + winningMove.column + "," + util.getKeyByValue(util.pieceMap, winningMove.gamePiece) + ")");    
     }
     
     private static Move findOptimalMove(GameNode gameNodeHead) {
@@ -52,10 +52,20 @@ public class Jarvis {
         }
         
         if(highestScore == 0){
-            //make sure we return a valid move
+            if(bestGameBoard.gameBoard[bestGameBoard.column][num_row + 3] == Util.gamePiece_s){
+                return new Move(bestGameBoard);
+            }else{
+                int col = 0;
+                for(byte[] column: bestGameBoard.gameBoard){
+                    if(column[num_row + 3] == Util.gamePiece_s){
+                        return new Move(col,Util.gamePiece_b);
+                    }
+                    col++;
+                }
+            }
         }
         
-        return new Move(bestGameBoard); //No win found = PANIC
+        return new Move(bestGameBoard);
     }
     
     
@@ -68,9 +78,9 @@ public class Jarvis {
             num_col = Integer.parseInt((String) tokenizer.nextElement());
             num_row = Integer.parseInt((String) tokenizer.nextElement());
             last_col = Integer.parseInt((String) tokenizer.nextElement());
-            total_game_time = Integer.parseInt((String) tokenizer.nextElement());
-            player1_time = Integer.parseInt((String) tokenizer.nextElement());
-            last_move_time = Integer.parseInt((String) tokenizer.nextElement());
+            //total_game_time = Integer.parseInt((String) tokenizer.nextElement());
+            //player1_time = Integer.parseInt((String) tokenizer.nextElement());
+            //last_move_time = Integer.parseInt((String) tokenizer.nextElement());
         } catch (NumberFormatException e) {
             System.err.println("Invalid input: " + e);
             return null;
@@ -180,8 +190,12 @@ public class Jarvis {
     
     public static class Move{
         public Move(GameNode gameNode) {
-            column = gameNode.column;
+            column = gameNode.column - 3;
             gamePiece = gameNode.gamePiece;
+        }
+        public Move(int col, byte gamepiece) {
+            column = col - 3;
+            gamePiece = gamepiece;
         }
         int column;
         byte gamePiece;
