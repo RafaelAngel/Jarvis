@@ -27,15 +27,16 @@ public class Jarvis {
         Util util = new Util();
         
         String input = getStandardInput();        
+        
         GameTree gameTree = createGameTree(input);
+        gameTree.GenerateChildren(gameTree.head, 5, true);
         
         Move winningMove = findOptimalMove(gameTree.head);
+                
+        //IsWin isWin = new IsWin();                    
+        //int score = isWin.winFunction(gameTree.head, last_col);
         
-        
-        IsWin isWin = new IsWin();                    
-        int score = isWin.winFunction(gameTree.head, last_col);
-        
-        System.out.println(score);    
+        System.out.println(winningMove.column + " " + winningMove.gamePiece);    
     }
     
     private static Move findOptimalMove(GameNode gameNodeHead) {

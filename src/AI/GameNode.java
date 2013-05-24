@@ -29,7 +29,7 @@ public class GameNode {
     public GameNode(GameNode currNode, int xPos, byte piece){
         gameBoard = currNode.gameBoard;
         
-        for (int y = 0; y < gameBoard[xPos].length; y++) {
+        for (int y = 0; y < gameBoard[xPos].length - 6; y++) {
             
             if(gameBoard[xPos + 3][y + 3] == Util.gamePiece_s){
                 gameBoard[xPos + 3][y + 3] = piece;
