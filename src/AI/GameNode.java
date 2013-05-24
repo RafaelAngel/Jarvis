@@ -33,16 +33,19 @@ public class GameNode {
         
     }
     
+    public GameNode(byte[][] gameBoard){        
+        this.gameBoard = gameBoard;        
+        children = new GameNode[(gameBoard.length -6)*2];        
+    }
+    
     public GameNode(int num_col, int num_row, int xPos, byte piece){
         gameBoard = new byte[num_col+6][num_row+6];
         
         for(byte[] column: gameBoard){
             Arrays.fill(column, gamePiece_s);
         }
-        
-       
+               
         gameBoard[xPos + 3][3] = piece;
-
         
         children = new GameNode[(num_col -6)*2];
         

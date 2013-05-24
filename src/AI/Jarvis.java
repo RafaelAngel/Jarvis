@@ -7,17 +7,63 @@ package AI;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.StringTokenizer;
 
 public class Jarvis {
     
     private static String ttyConfig;
 
+    private static int num_col;
+    private static int num_row;
+    private static int last_col;
+    private static int total_game_time;
+    private static int player1_time ;
+    private static int last_move_time;
+    
     public static void main(String[] args) {
         
-        String input = getStandardInput();
+        Util util = new Util();
+        
+        String input = getStandardInput();        
+        GameNode parentNode = createGameNode(input);
+        
         IsWin isWin = new IsWin();                    
-        int score = isWin.winFunction(input);
+        int score = isWin.winFunction(parentNode, last_col);
+        
         System.out.println(score);    
+    }
+    
+    private static GameNode createGameNode(String input){
+        
+        StringTokenizer tokenizer = new StringTokenizer(input, ",");
+        
+        try {
+            num_col = Integer.parseInt((String) tokenizer.nextElement());
+            num_row = Integer.parseInt((String) tokenizer.nextElement());
+            last_col = Integer.parseInt((String) tokenizer.nextElement());
+            total_game_time = Integer.parseInt((String) tokenizer.nextElement());
+            player1_time = Integer.parseInt((String) tokenizer.nextElement());
+            last_move_time = Integer.parseInt((String) tokenizer.nextElement());
+        } catch (NumberFormatException e) {
+            System.err.println("Invalid input: " + e);
+            return null;
+        }
+        
+        byte[][] gameBoard = new byte[num_col + 6][num_row + 6];
+        for(byte[] column: gameBoard){
+            Arrays.fill(column, Util.gamePiece_s);
+        }
+        
+        for (int x = 0; x < num_col; x++) {
+            for (int y = 0; y < num_row; y++) {
+                gameBoard[x + 3][y + 3] = Util.pieceMap.get((String) tokenizer.nextElement());
+            }
+        }
+
+        GameNode gameNode = new GameNode(gameBoard);
+        return gameNode;
     }
     
     private static String getStandardInput(){
