@@ -1,0 +1,31 @@
+#===============================================================================
+# makeinfo
+#
+# makeinfo is an information file that can be used to tell the makeai script
+# some more specifics as to how you want your AI to be built.  Further details
+# as to what can be specified are indicated below.
+#===============================================================================
+
+# COMP is the name of the compiler that is to be used to create your ai
+# this parameter will be checked against a list of valid known compilers.
+# If not set COMP will default to /usr/bin/gcc.
+COMP=java
+
+# FLAGS are parameters that can be passed into the compiler.  If not set
+# FLAGS will default to "-O2"
+FLAGS=-O2
+
+# FILES is a list of files to be used to compile the project.  If not set,
+# FILES will default to "*.c" in which case all .c files in the directory will
+# be compiled.  Note that if there are two files in the directory that contain
+# a main function that no executable will be built with the "*.c" option.
+# In this scenario you must specify the file(s) to compile with this parameter.
+FILES=*.java
+
+# MANIFEST is the name of the manifest file that specifies the default
+# class when compbining java classes into a jar file for java based
+# implementations of the AI.  MANIFEST will default to and empty
+# variable if not specified.
+MANIFEST=manifest
+
+

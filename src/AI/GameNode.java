@@ -11,12 +11,24 @@ import java.util.Arrays;
 public class GameNode {
     
     public byte[][] gameBoard;
+    public GameNode parent;
     public GameNode[] children;
-    public GameNode parrent = null;
+    public byte gamePiece;
+    public int column;
+    public int score;
+    public int childrenScore;
+
+    // Initializes gameNode to current board state, used for creating head of gameTree
+    public GameNode(byte[][] gameBoard){        
+        this.gameBoard = gameBoard;    
+        parent = null;
+        children = new GameNode[(gameBoard.length -6)*2];        
+    }
     
-    public GameNode(GameNode parrentBoard, int xPos, byte piece){
-        gameBoard = parrentBoard.gameBoard;
-        parrent = parrentBoard;
+    // Adds a piece at xPos to the parent's board state
+    public GameNode(byte[][] parentBoard, int xPos, byte piece){
+        gameBoard = parentBoard;
+        
         for (int y = 0; y < gameBoard[xPos].length; y++) {
             
             if(gameBoard[xPos + 3][y + 3] == Util.gamePiece_s){
@@ -25,16 +37,12 @@ public class GameNode {
             }
         }
         
-        
-        children = new GameNode[(gameBoard.length -6)*2];
-        
-    }
-    
-    public GameNode(byte[][] gameBoard){        
-        this.gameBoard = gameBoard;        
+        column = xPos;
+        gamePiece = piece;
         children = new GameNode[(gameBoard.length -6)*2];        
     }
     
+    // Creates gameNode with empty board state and adds a piece to xPos
     public GameNode(int num_col, int num_row, int xPos, byte piece){
         gameBoard = new byte[num_col+6][num_row+6];
         
@@ -43,11 +51,14 @@ public class GameNode {
         }
                
         gameBoard[xPos + 3][3] = piece;
-        
+
+        column = xPos;
+        gamePiece = piece;
         children = new GameNode[(num_col -6)*2];
         
     }
     
+    // Creates gameNode with empty board state
     public GameNode(int num_col, int num_row){
         gameBoard = new byte[num_col+6][num_row+6];
         
@@ -57,6 +68,17 @@ public class GameNode {
 
         children = new GameNode[(num_col -6)*2];
         
+    }
+    
+    public int calculateChildrensScore(){
+        int totalScore = 0;
+        if(children == null || children.length == 0){
+            return score;
+        }        
+        for(GameNode gameNode: children){
+            totalScore += gameNode.calculateChildrensScore();
+        }
+        return totalScore;
     }
 
 }
