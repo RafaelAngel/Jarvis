@@ -47,5 +47,16 @@ public class GameNode {
         children = new GameNode[(num_col -6)*2];
         
     }
+    
+    public GameNode(int num_col, int num_row){
+        gameBoard = new byte[num_col+6][num_row+6];
+        
+        for(byte[] column: gameBoard){
+            Arrays.fill(column, gamePiece_s);
+        }
+
+        children = new GameNode[(num_col -6)*2];
+        
+    }
 
 }
