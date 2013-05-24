@@ -27,7 +27,7 @@ public class Jarvis {
         Util util = new Util();
         
         String input = getStandardInput();        
-        GameNode parentNode = createGameNode(input);
+        GameNode parentNode = createGameTree(input);
         
         IsWin isWin = new IsWin();                    
         int score = isWin.winFunction(parentNode, last_col);
@@ -35,7 +35,7 @@ public class Jarvis {
         System.out.println(score);    
     }
     
-    private static GameNode createGameNode(String input){
+    private static GameTree createGameTree(String input){
         
         StringTokenizer tokenizer = new StringTokenizer(input, ",");
         
@@ -62,8 +62,8 @@ public class Jarvis {
             }
         }
 
-        GameNode gameNode = new GameNode(gameBoard);
-        return gameNode;
+        GameTree gameTree = new GameTree(gameBoard);
+        return gameTree;
     }
     
     private static String getStandardInput(){
