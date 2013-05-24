@@ -12,22 +12,19 @@ public class GameNode {
     
     public byte[][] gameBoard;
     public GameNode[] children;
+    public GameNode parrent = null;
     
-    private static final byte gamePiece_r = new Byte((byte) 00);
-    private static final byte gamePiece_b = new Byte((byte) 01);
-    private static final byte gamePiece_g = new Byte((byte) 10);
-    private static final byte gamePiece_s = new Byte((byte) 11);
-    
-    public GameNode(byte[][] parrentBoard, int xPos, byte piece){
-        gameBoard = parrentBoard;
-        
+    public GameNode(GameNode parrentBoard, int xPos, byte piece){
+        gameBoard = parrentBoard.gameBoard;
+        parrent = parrentBoard;
         for (int y = 0; y < gameBoard[xPos].length; y++) {
             
-            if(gameBoard[xPos + 3][y + 3] == gamePiece_s){
+            if(gameBoard[xPos + 3][y + 3] == Util.gamePiece_s){
                 gameBoard[xPos + 3][y + 3] = piece;
                 break;
             }
         }
+        
         
         children = new GameNode[(gameBoard.length -6)*2];
         
@@ -42,7 +39,7 @@ public class GameNode {
         gameBoard = new byte[num_col+6][num_row+6];
         
         for(byte[] column: gameBoard){
-            Arrays.fill(column, gamePiece_s);
+            Arrays.fill(column, Util.gamePiece_s);
         }
                
         gameBoard[xPos + 3][3] = piece;
@@ -55,7 +52,7 @@ public class GameNode {
         gameBoard = new byte[num_col+6][num_row+6];
         
         for(byte[] column: gameBoard){
-            Arrays.fill(column, gamePiece_s);
+            Arrays.fill(column, Util.gamePiece_s);
         }
 
         children = new GameNode[(num_col -6)*2];

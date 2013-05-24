@@ -34,11 +34,45 @@ public class GameTree {
         boardWidth = gameData.length;
         boardHeight = gameData[0].length;
     }
+   
     
-    public void GenerateChildren(GameNode currNode, int levelsDeep)
+    /**
+     * Recursively generates the GameTree by adding a level of children for levelsDeep
+     * 
+     * @param currNode
+     * @param levelsDeep
+     * @param isJarvisTurn
+     */
+    public void GenerateChildren(GameNode currNode, int levelsDeep, boolean isJarvisTurn)
     {
-        boolean isJarvisTurn = true;
         
+        if(levelsDeep == 0){
+            return;
+        }
+        byte colouredNode = Util.gamePiece_r;
+        if(isJarvisTurn)
+        {
+            colouredNode = Util.gamePiece_b;
+        }
+        int newLevelsDeep = levelsDeep--;
+        
+        for(int i = 0; i < boardWidth; i++)
+        {
+            //add coloured node
+            if(currNode.children[i]==null){
+                currNode.children[i] = new GameNode(currNode, i, colouredNode);
+            }
+            GenerateChildren(currNode.children[i],newLevelsDeep,!isJarvisTurn);
+            //add space
+            if(currNode.children[(boardWidth)*2 -i] ==null){
+                currNode.children[(boardWidth)*2 -i]  = new GameNode(currNode, i, colouredNode);
+            }
+            GenerateChildren(currNode.children[i],newLevelsDeep,!isJarvisTurn);
+            
+        }
+        
+        
+         
         
         
     }
