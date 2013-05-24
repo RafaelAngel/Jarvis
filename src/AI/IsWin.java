@@ -1,17 +1,6 @@
-//package AI;
+package AI;
 
-/*
-* non-blocking console input courtesy of http://www.darkcoding.net/software/non-blocking-console-io-is-not-possible/
-*/
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.ByteArrayOutputStream; 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -29,133 +18,25 @@ public class IsWin {
     private static final byte gamePiece_g = new Byte((byte) 10);
     private static final byte gamePiece_s = new Byte((byte) 11);
     
-    /*public static void main(String[] args) throws IOException {
-        
-        IsWin isWin = new IsWin();
-        String input = "";         
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        int nextChar = br.read();
-        
-        while (nextChar != -1 && ')' != (char) nextChar) {
-            input += (char) nextChar;
-            nextChar = br.read();
-        }  
-        input = input.substring(1);        
-        int score = isWin.winFunction(input);        
-        BufferedWriter log = new BufferedWriter(new OutputStreamWriter(System.out));
-
-        log.write(score);
-        System.out.println(score);
-        log.flush();
-    }*/
-	
-
-    private static String ttyConfig;
-
-    public static void main(String[] args) {
-
-	String input = "";
-        IsWin isWin = new IsWin();
-
-	try {
-		setTerminalToCBreak();
-		char character = (char) System.in.read();
-		while (character != ')') {
-			if ( System.in.available() != 0 ) {
-				input += character;
-				character = (char) System.in.read();
-			}
-		} // end while
-	}
-	catch (IOException e) {
-		System.err.println("IOException");
-	}
-	catch (InterruptedException e) {
-		System.err.println("InterruptedException");
-	}
-	finally {
-		try {
-			stty( ttyConfig.trim() );
-		}
-		catch (Exception e) {
-			System.err.println("Exception restoring tty config");
-		}
-        }
-        input = input.substring(1);   
-	int score = isWin.winFunction(input);
-	System.out.println(score);
-    }
-
-    private static void setTerminalToCBreak() throws IOException, InterruptedException {
-
-        ttyConfig = stty("-g");
-
-        // set the console to be character-buffered instead of line-buffered
-        stty("-icanon min 1");
-
-        // disable character echoing
-        stty("-echo");
-    }
-
-    /**
-     *  Execute the stty command with the specified arguments
-     *  against the current active terminal.
-     */
-    private static String stty(final String args)
-                    throws IOException, InterruptedException {
-        String cmd = "stty " + args + " < /dev/tty";
-
-        return exec(new String[] {
-                    "sh",
-                    "-c",
-                    cmd
-                });
-    }
-
-    /**
-     *  Execute the specified command and return the output
-     *  (both stdout and stderr).
-     */
-    private static String exec(final String[] cmd)
-                    throws IOException, InterruptedException {
-        ByteArrayOutputStream bout = new ByteArrayOutputStream();
-
-        Process p = Runtime.getRuntime().exec(cmd);
-        int c;
-        InputStream in = p.getInputStream();
-
-        while ((c = in.read()) != -1) {
-            bout.write(c);
-        }
-
-        in = p.getErrorStream();
-
-        while ((c = in.read()) != -1) {
-            bout.write(c);
-        }
-
-        p.waitFor();
-
-        String result = new String(bout.toByteArray());
-        return result;
-    }
-    
     public int winFunction(String input) {
 
         initializeMaps();
-
-        //String input = readStandardInput();
-
         StringTokenizer tokenizer = new StringTokenizer(input, ",");
-
-        int num_col = Integer.parseInt((String) tokenizer.nextElement());
-        int num_row = Integer.parseInt((String) tokenizer.nextElement());
-        int last_col = Integer.parseInt((String) tokenizer.nextElement());
-        int total_game_time = Integer.parseInt((String) tokenizer.nextElement());
-        int player1_time = Integer.parseInt((String) tokenizer.nextElement());
-        int last_move_time = Integer.parseInt((String) tokenizer.nextElement());
-
+        
+        int num_col;
+        int num_row;
+        try {
+            num_col = Integer.parseInt((String) tokenizer.nextElement());
+            num_row = Integer.parseInt((String) tokenizer.nextElement());
+            int last_col = Integer.parseInt((String) tokenizer.nextElement());
+            int total_game_time = Integer.parseInt((String) tokenizer.nextElement());
+            int player1_time = Integer.parseInt((String) tokenizer.nextElement());
+            int last_move_time = Integer.parseInt((String) tokenizer.nextElement());
+        } catch (NumberFormatException e) {
+            System.err.println("Invalid input: " + e);
+            return 0;
+        }
+        
         byte[][] gameBoard = new byte[num_col + 6][num_row + 6];
         for(byte[] column: gameBoard){
             Arrays.fill(column, gamePiece_s);
@@ -172,9 +53,8 @@ public class IsWin {
                 }
             }
         }
-
-        // (7,6,3,600,290,20,r,b,s,s,s,s,b,b,r,g,s,s,b,r,b,b,g,s,r,g,r,b,s,s,r,r,b,r,r,s,s,s,s,s,s,s,s,s,s,s,s,s)
-
+        
+       // prints the game board (will be rotated 90 degress)
        /* for (int x = 0; x < num_col; x++) {
             for (int y = 0; y < num_row; y++) {
                 System.out.print(getKeyByValue(pieceMap, gameBoard[x + 3][y + 3]));

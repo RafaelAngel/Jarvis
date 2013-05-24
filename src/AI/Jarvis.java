@@ -1,47 +1,109 @@
-/*package AI;
+package AI;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+/*
+* non-blocking console input courtesy of http://www.darkcoding.net/software/non-blocking-console-io-is-not-possible/
+*/
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class Jarvis {
+    
+    private static String ttyConfig;
 
-    public static void main(String[] args) throws IOException {
-
-        long startTime = System.nanoTime();
+    public static void main(String[] args) {
         
-        IsWin isWin = new IsWin();
+        String input = getStandardInput();
+        IsWin isWin = new IsWin();                    
+        int score = isWin.winFunction(input);
+        System.out.println(score);    
+    }
+    
+    private static String getStandardInput(){
         
-        System.out.println("Hello World");
-
-        String input = ""; 
+        String input = "";
         
-        BufferedReader br = new BufferedReader(new FileReader("testData2.txt"));    
-        
-        int count = 0;
-        
-        while(br.ready()){                       
-            int nextChar = br.read();
-            while (nextChar != -1 && ')' != (char) nextChar) {
-                input += (char) nextChar;
-                nextChar = br.read();
-            }  
-            input = input.substring(1);
-            
-            String actual = br.readLine();
-            if(actual.contains(String.valueOf(isWin.winFunction(input))) == false){
-                //System.out.println(isWin.winFunction(input) + " " + actual + " : " + input + " ;  successful:" + count);
-            }else{
-                count++;
+        try {
+            setTerminalToCBreak();
+            char character = (char) System.in.read();
+            while (character != ')') {
+                if ( System.in.available() != 0 ) {
+                    input += character;
+                    character = (char) System.in.read();
+                }
+            } // end while
+        }
+        catch (IOException e) {
+            System.err.println("IOException");
+        }
+        catch (InterruptedException e) {
+            System.err.println("InterruptedException");
+        }
+        finally 
+        {
+            try {
+                stty( ttyConfig.trim() );
             }
-            input = "";
-        }        
-
-        long endTime = System.nanoTime();
-        
-        System.out.println("Successful wins: " + count + " , running time:" + (endTime - startTime));
-        
+            catch (Exception e) {
+                System.err.println("Exception restoring tty config");
+            }
+        }
+        input = input.substring(1);   
+        return input;
     }
 
+    private static void setTerminalToCBreak() throws IOException, InterruptedException {
+
+        ttyConfig = stty("-g");
+
+        // set the console to be character-buffered instead of line-buffered
+        stty("-icanon min 1");
+
+        // disable character echoing
+        stty("-echo");
+    }
+
+    /**
+     *  Execute the stty command with the specified arguments
+     *  against the current active terminal.
+     */
+    private static String stty(final String args)
+                    throws IOException, InterruptedException {
+        String cmd = "stty " + args + " < /dev/tty";
+
+        return exec(new String[] {
+                    "sh",
+                    "-c",
+                    cmd
+                });
+    }
+
+    /**
+     *  Execute the specified command and return the output
+     *  (both stdout and stderr).
+     */
+    private static String exec(final String[] cmd)
+                    throws IOException, InterruptedException {
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+
+        Process p = Runtime.getRuntime().exec(cmd);
+        int c;
+        InputStream in = p.getInputStream();
+
+        while ((c = in.read()) != -1) {
+            bout.write(c);
+        }
+
+        in = p.getErrorStream();
+
+        while ((c = in.read()) != -1) {
+            bout.write(c);
+        }
+
+        p.waitFor();
+
+        String result = new String(bout.toByteArray());
+        return result;
+    }
 }
-*/
