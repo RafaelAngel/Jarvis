@@ -1,4 +1,4 @@
-package AI;
+//package AI;
 
 public class GameTree {
     
@@ -6,6 +6,7 @@ public class GameTree {
     public GameNode current;
     public int boardWidth;
     public int boardHeight;
+    public IsWin isWin;
     
     /**
      * Basic GameTree constructor that makes an empty game tree
@@ -20,6 +21,7 @@ public class GameTree {
         
         boardWidth = num_col;
         boardHeight = num_row;
+        isWin = new IsWin();
     }
     
     /**
@@ -33,6 +35,7 @@ public class GameTree {
         
         boardWidth = gameData.length - 6;
         boardHeight = gameData[0].length - 6;
+        isWin = new IsWin();
     }
    
     
@@ -44,12 +47,12 @@ public class GameTree {
      * @param isJarvisTurn
      */
     public void GenerateChildren(GameNode currNode, int levelsDeep, boolean isJarvisTurn)
-    {
-        
+    {        
         if(levelsDeep == 0){
             return;
         }
         byte colouredNode = Util.gamePiece_r;
+        byte greenColouredNode = Util.gamePiece_g;
         if(isJarvisTurn)
         {
             colouredNode = Util.gamePiece_b;
@@ -60,21 +63,45 @@ public class GameTree {
         {
             //add coloured node
             if(currNode.children[i]==null){
-                currNode.children[i] = new GameNode(currNode, i, colouredNode);
+                currNode.children[i] = new GameNode(currNode.gameBoard, i, colouredNode, boardHeight, boardWidth);
             }
-            GenerateChildren(currNode.children[i],newLevelsDeep,!isJarvisTurn);
-            //add space
-            if(currNode.children[(boardWidth)*2 - i - 1] ==null){
-                currNode.children[(boardWidth)*2 - i - 1]  = new GameNode(currNode, i, colouredNode);
+            if(currNode.children[i].gameBoard == null){
+                //gameboard is set to null if the column is full, this is an invalid child
+                currNode.children[i] = null;
             }
-            GenerateChildren(currNode.children[i],newLevelsDeep,!isJarvisTurn);
+            else{
+                int score = currNode.children[i].calculateScore(isWin, i);
+                if(score > 0){
+                    //TODO: win condition, somehow break out of recursion
+                }
+                else if(score < 0){
+                    //lose condition - do nothing, don't generate more children
+                }
+                else{
+                    GenerateChildren(currNode.children[i],newLevelsDeep,!isJarvisTurn);
+                }
+            }
             
+            //add green
+            if(currNode.children[(boardWidth)*2 - i - 1] ==null){
+                currNode.children[(boardWidth)*2 - i - 1]  = new GameNode(currNode.gameBoard, i, greenColouredNode, boardHeight, boardWidth);
+            }
+            if(currNode.children[(boardWidth)*2 - i - 1].gameBoard == null){
+                //gameboard is set to null if the column is full, this is an invalid child
+                currNode.children[(boardWidth)*2 - i - 1] = null;
+            }
+            else{
+                int score = currNode.children[(boardWidth)*2 - i - 1].calculateScore(isWin, i);
+                if(score > 0){
+                    //TODO: win condition, somehow break out of recursion
+                }
+                else if(score < 0){
+                    //lose condition - do nothing, don't generate more children
+                }
+                else{
+                    GenerateChildren(currNode.children[(boardWidth)*2 - i - 1],newLevelsDeep,!isJarvisTurn);
+                }
+            }            
         }
-        
-        
-         
-        
-        
     }
-
 }

@@ -1,25 +1,13 @@
-package AI;
+//package AI;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.StringTokenizer;
 
 public class IsWin {
 
     public int winFunction(GameNode gameNode, int last_col) {
         
-       // prints the game board (will be rotated 90 degress)
-       /* for (int x = 0; x < num_col; x++) {
-            for (int y = 0; y < num_row; y++) {
-                System.out.print(getKeyByValue(pieceMap, gameBoard[x + 3][y + 3]));
-            }
-            System.out.println();
-        }*/
-
         int score = calculateScore(gameNode.gameBoard, last_col);
 
         return score;
@@ -37,6 +25,7 @@ public class IsWin {
         int y;
         for(y = 0; y < gameBoard[x+3].length; y++){
             if(gameBoard[x+3][y+3] == Util.gamePiece_s){
+                y--;
                 break;
             }
         }
@@ -92,32 +81,13 @@ public class IsWin {
         
         // Blue win
         else if(blueScore_total > redScore_total){
-            return -blueScore_highest;
+            return blueScore_highest;
         }
         
         // Red win
         else{        
-            return -redScore_highest;
+            return redScore_highest;
         }
-    }
-
-    private String readStandardInput() {
-
-        String input = "";
-        try {
-            int nextChar = System.in.read();
-
-            while (nextChar != -1 && ')' != (char) nextChar) {
-                input += (char) nextChar;
-                // System.out.println(input);
-                nextChar = System.in.read();
-            }
-
-        } catch (IOException io) {
-            io.printStackTrace();
-        }
-        input = input.substring(1);
-        return input;
     }
 
     public static <T, E> T getKeyByValue(Map<T, E> map, E value) {
