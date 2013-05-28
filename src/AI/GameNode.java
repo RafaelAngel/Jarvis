@@ -26,20 +26,30 @@ public class GameNode {
     }
     
     // Adds a piece at xPos to the parent's board state
-    public GameNode(GameNode currNode, int xPos, byte piece){
-        gameBoard = currNode.gameBoard;
+    public GameNode(byte[][] parentBoard, int xPos, byte piece, int boardHeight, int boardWidth){
         
-        for (int y = 0; y < gameBoard[xPos].length - 6; y++) {
-            
+        gameBoard = new byte[boardWidth + 6][boardHeight + 6];        
+        for(int i = 0; i < parentBoard.length; i++){
+            System.arraycopy(parentBoard[i], 0, gameBoard[i], 0, parentBoard[i].length);
+        }
+
+        int y;
+        for (y = 0; y < gameBoard[xPos].length - 6; y++) {            
             if(gameBoard[xPos + 3][y + 3] == Util.gamePiece_s){
                 gameBoard[xPos + 3][y + 3] = piece;
                 break;
             }
         }
         
+        // This is true if the column was full
+        if(y == gameBoard[xPos].length - 6){
+            gameBoard = null;
+            return;
+        }
+        
         column = xPos;
         gamePiece = piece;
-        children = new GameNode[(gameBoard.length -6)*2];        
+        children = new GameNode[(gameBoard.length - 6) * 2];        
     }
     
     // Creates gameNode with empty board state and adds a piece to xPos
@@ -68,6 +78,13 @@ public class GameNode {
 
         children = new GameNode[(num_col -6)*2];
         
+    }
+    
+    public int calculateScore(IsWin isWin, int last_col){
+        
+        score = isWin.winFunction(this, last_col);
+        
+        return score;
     }
     
     public int calculateChildrensScore(){
