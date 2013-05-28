@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 import java.util.Map.Entry;
 
 public final class Util {
@@ -45,6 +46,47 @@ public final class Util {
         winMap.put(Arrays.toString(new Byte[] { gamePiece_r, gamePiece_g, gamePiece_r, gamePiece_g }), -3);
         winMap.put(Arrays.toString(new Byte[] { gamePiece_g, gamePiece_r, gamePiece_g, gamePiece_r }), -3);
         
+    }
+
+    public static byte[][] buildGameBoardFromNode(GameNode gameNode) {
+        
+        GameNode parent = gameNode.parent;
+        while(parent.parent != null){
+            parent = parent.parent;
+        }        
+        byte[][] gameBoard = parent.gameTree.gameBoard;
+        
+        Stack<Util.Move> moves = new Stack<Util.Move>();
+
+        while(gameNode.parent != null){
+            moves.add(new Util.Move(gameNode));
+            gameNode = gameNode.parent;
+        }
+        
+        for(Util.Move move: moves){
+            int row;
+            for(row = 3; gameBoard[move.column + 3][row] != Util.gamePiece_s; row++){
+                if(row >= gameBoard[move.column + 3].length){
+                    break;
+                }
+            }
+            gameBoard[move.column + 3][row] = move.gamePiece;            
+        }     
+        
+        return gameBoard;
+    }
+    
+    public static class Move{
+        public Move(GameNode gameNode) {
+            column = gameNode.column;
+            gamePiece = gameNode.gamePiece;
+        }
+        public Move(int col, byte gamepiece) {
+            column = col;
+            gamePiece = gamepiece;
+        }
+        int column;
+        byte gamePiece;
     }
     
     public static <T, E> T getKeyByValue(Map<T, E> map, E value) {
@@ -142,5 +184,5 @@ public final class Util {
         String result = new String(bout.toByteArray());
         return result;
     }
-    
+
 }

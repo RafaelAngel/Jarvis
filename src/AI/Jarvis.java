@@ -21,14 +21,14 @@ public class Jarvis {
         
         gameTree.GenerateChildren(gameTree.head, 5, true);
         
-        Move winningMove = findOptimalMove(gameTree.head);
+        Util.Move winningMove = findOptimalMove(gameTree.head);
                 
         //IsWin isWin = new IsWin();                    
         //int score = isWin.winFunction(gameTree.head, last_col);
         
        // printBoard(gameTree.head.gameBoard);
         
-        System.out.println("(" + (winningMove.column + 1) + "," + util.getKeyByValue(util.pieceMap, winningMove.gamePiece) + ")");    
+        System.out.println("(" + (winningMove.column + 1) + "," + Util.getKeyByValue(Util.pieceMap, winningMove.gamePiece) + ")");    
     }
     
     private static void printBoard(byte[][] gameBoard){
@@ -41,41 +41,43 @@ public class Jarvis {
          }
     }
     
-    private static Move findOptimalMove(GameNode gameNodeHead) {
+    private static Util.Move findOptimalMove(GameNode gameNodeHead) {
         
-        GameNode bestGameBoard = gameNodeHead.children[8];
-        int highestScore = 0;
+        GameNode bestGameBoard = gameNodeHead.children[7];
+        double highestScore = 0;
         
         for(GameNode gameNode: gameNodeHead.children){           
             if(gameNode.score > 0){
                 //immediate move to win
-                return new Move(gameNode);
+                return new Util.Move(gameNode);
             }
             if(gameNode.score < 0){
                 //immediate move to prevent a red win
-                return new Move(gameNode.column, Util.gamePiece_s);
+                return new Util.Move(gameNode.column, Util.gamePiece_s);
             } 
-            if(highestScore < gameNode.calculateChildrensScore()){
-                highestScore = gameNode.calculateChildrensScore();
+            if(highestScore < gameNode.calculateChildrensScore(1)){
+                highestScore = gameNode.calculateChildrensScore(1);
                 bestGameBoard = gameNode;
             }
         }
         
         if(highestScore == 0){
-            if(bestGameBoard.gameBoard[bestGameBoard.column][num_row + 3] == Util.gamePiece_s){
-                return new Move(bestGameBoard);
+            
+            byte[][] gameBoard = Util.buildGameBoardFromNode(bestGameBoard);            
+            if(gameBoard[bestGameBoard.column][num_row + 3] == Util.gamePiece_s){
+                return new Util.Move(bestGameBoard);
             }else{
                 int col = 0;
-                for(byte[] column: bestGameBoard.gameBoard){
+                for(byte[] column: gameBoard){
                     if(column[num_row + 3] == Util.gamePiece_s){
-                        return new Move(col,Util.gamePiece_b);
+                        return new Util.Move(col,Util.gamePiece_b);
                     }
                     col++;
                 }
             }
         }
         
-        return new Move(bestGameBoard);
+        return new Util.Move(bestGameBoard);
     }
     
     private static GameTree createGameTree(String input){
@@ -107,18 +109,5 @@ public class Jarvis {
 
         GameTree gameTree = new GameTree(gameBoard);
         return gameTree;
-    }
-    
-    public static class Move{
-        public Move(GameNode gameNode) {
-            column = gameNode.column;
-            gamePiece = gameNode.gamePiece;
-        }
-        public Move(int col, byte gamepiece) {
-            column = col;
-            gamePiece = gamepiece;
-        }
-        int column;
-        byte gamePiece;
     }
 }

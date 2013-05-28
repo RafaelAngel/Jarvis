@@ -8,9 +8,9 @@ public class IsWin {
 
     public int winFunction(GameNode gameNode, int last_col) {
         
-        int score = calculateScore(gameNode.gameBoard, last_col);
-
-        return score;
+        byte[][] gameBoard = Util.buildGameBoardFromNode(gameNode);
+        
+        return calculateScore(gameBoard, last_col);
     }
 
     private int calculateScore(byte[][] gameBoard, int last_col) {
