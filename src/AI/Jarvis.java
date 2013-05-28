@@ -64,7 +64,7 @@ public class Jarvis {
             }
             if(gameNode.score < 0){
                 //immediate move to prevent a red win
-                return new Util.Move(gameNode.column, Util.gamePiece_s);
+                return new Util.Move(gameNode.column, Util.gamePiece_b);
             } 
             if(highestScore < gameNode.calculateChildrensScore()){
                 highestScore = gameNode.calculateChildrensScore();

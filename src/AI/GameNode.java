@@ -45,17 +45,26 @@ public class GameNode {
     }
     
     public double calculateChildrensScore(){
-        double totalScore = score;
+        double totalScore = score; 
+        
+        int depth = 1;
+        GameNode father = this.parent;
+        while(father != null){
+            father = father.parent;
+            depth++;
+        }
+        
         if(children == null || children.length == 0){
-            return score;
-        }        
+            return score / depth;
+        }       
+        
         for(GameNode gameNode: children){
             if(gameNode == null){
                 continue;
             }
             totalScore += gameNode.calculateChildrensScore();
         }
-        return totalScore;
+        return totalScore / depth;
     }
 
 }
