@@ -1,4 +1,7 @@
-//package AI;
+package AI;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GameTree {
     
@@ -7,14 +10,19 @@ public class GameTree {
     public int boardWidth;
     public int boardHeight;
     public IsWin isWin;
+    public int depth;
     
+    public int nodesSkipped=0;
+    
+    public int dupeLevelToCheck = 3;
+    public ArrayList<GameNode> dupeNodes = new ArrayList<GameNode>();
     /**
      * Basic GameTree constructor that makes an empty game tree
      * 
      * @param num_col Number of columns in the game
      * @param num_row Number of rows in the game
      */
-    public GameTree(int num_col, int num_row)
+    public GameTree(int num_col, int num_row, int depth)
     {
         gameBoard = new byte[num_col+6][num_row+6];
         
@@ -22,6 +30,8 @@ public class GameTree {
         
         boardWidth = num_col;
         boardHeight = num_row;
+        
+        this.depth=depth;
         isWin = new IsWin();
     }
     
@@ -29,13 +39,15 @@ public class GameTree {
      * Creates a GameTree from the formatted from file boardInfo
      * @param boardInfo
      */
-    public GameTree(byte[][] gameData)
+    public GameTree(byte[][] gameData, int depth)
     {
         gameBoard = gameData;        
         head = new GameNode(gameData.length - 6, this);
         
         boardWidth = gameData.length - 6;
         boardHeight = gameData[0].length - 6;
+        
+        this.depth=depth;
         isWin = new IsWin();
     }
    
@@ -48,8 +60,15 @@ public class GameTree {
      * @param isJarvisTurn
      */
     public void GenerateChildren(GameNode currNode, int levelsDeep, boolean isJarvisTurn)
-    {        
+    {   
+        double score;
+        
         if(levelsDeep == 0){
+            return;
+        }
+        //There exists a identical board to currNodes board
+        if(currNode.identical!=null)
+        {
             return;
         }
         byte colouredNode = Util.gamePiece_r;
@@ -81,9 +100,37 @@ public class GameTree {
             if(piecesInColumn < boardHeight){
                 //add coloured node
                 currNode.children[i] = new GameNode(currNode, i, colouredNode, boardWidth);
-            }            
+                if (this.depth-levelsDeep+1 == dupeLevelToCheck)
+                {
+                    byte[][] childBoard =Util.buildGameBoardFromNode(currNode.children[i]); 
+                    GameNode identNode =null;
+                    
+                    for(GameNode tempNode:dupeNodes){
+                        if(Arrays.deepEquals(tempNode.board, childBoard))
+                        {
+                            identNode = tempNode;
+                            break;
+                        }
+                    }
+                    
+                    
+                    if(identNode ==null){
+                        currNode.children[i].board=childBoard;
+                        dupeNodes.add(currNode.children[i]);
+                    }
+                    else{
+                        nodesSkipped++;
+                        currNode.children[i].identical=identNode;
+                        currNode.children[i].score = identNode.score;
+                        
+                        
+                    }
+                }
+            }
+            
+            
             if(currNode.children[i] != null){            
-                double score = currNode.children[i].calculateScore(isWin, i);
+                score = currNode.children[i].calculateScore(isWin, i);
                 if(score > 0){
                     //TODO: win condition, somehow break out of recursion and play this piece
                 }
@@ -114,9 +161,38 @@ public class GameTree {
             if(piecesInColumn < boardHeight){
                 //add green node
                 currNode.children[(boardWidth)*2 - i - 1] = new GameNode(currNode, i, greenColouredNode, boardWidth);
-            }                        
+                
+                if (this.depth-levelsDeep+1 == dupeLevelToCheck)
+                {
+                    byte[][] childBoard =Util.buildGameBoardFromNode(currNode.children[(boardWidth)*2 - i - 1]); 
+                    GameNode identNode =null;
+                    
+                    for(GameNode tempNode:dupeNodes){
+                        if(Arrays.deepEquals(tempNode.board, childBoard))
+                        {
+                            identNode = tempNode;
+                            break;
+                        }
+                    }
+                    
+                    
+                    if(identNode ==null){
+                        currNode.children[(boardWidth)*2 - i - 1].board=childBoard;
+                        dupeNodes.add(currNode.children[(boardWidth)*2 - i - 1]);
+                    }
+                    else{
+                        nodesSkipped++;
+                        currNode.children[(boardWidth)*2 - i - 1].identical=identNode;
+                        currNode.children[(boardWidth)*2 - i - 1].score = identNode.score;
+                        
+                        currNode.children[(boardWidth)*2 - i - 1].children = null;
+                    }
+                }
+            }
+            
+            
             if(currNode.children[(boardWidth)*2 - i - 1] !=null){
-                double score = currNode.children[(boardWidth)*2 - i - 1].calculateScore(isWin, i);
+                score = currNode.children[(boardWidth)*2 - i - 1].calculateScore(isWin, i);
                 if(score > 0){
                     //TODO: win condition, somehow break out of recursion
                 }

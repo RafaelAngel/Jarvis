@@ -1,4 +1,4 @@
-//package AI;
+package AI;
 
 import java.util.Arrays;
 import java.util.StringTokenizer;
@@ -12,22 +12,29 @@ public class Jarvis {
     private static int player1_time ;
     private static int last_move_time;
     
+    /**
+     * Number of moves Jarvis looks into the "future"
+     */
+    public static int movesDepth = 5;
+    
     public static void main(String[] args) {
         
         Util util = new Util();      
         String input = Util.getStandardInput();        
-        
+        long startTime = System.currentTimeMillis();
         GameTree gameTree = createGameTree(input);
         
-        gameTree.GenerateChildren(gameTree.head, 5, true);
+        gameTree.GenerateChildren(gameTree.head, movesDepth, true);
         
         Util.Move winningMove = findOptimalMove(gameTree.head);
                 
         //IsWin isWin = new IsWin();                    
         //int score = isWin.winFunction(gameTree.head, last_col);
         
-        //printBoard(gameTree.gameBoard);
-        
+        long elapsedTime = System.currentTimeMillis() - startTime;
+        printBoard(gameTree.gameBoard);
+        System.out.println("Time elapsed: " + elapsedTime);
+        System.out.println("Ident Boards Skipped: " + gameTree.nodesSkipped );
         System.out.println("(" + (winningMove.column + 1) + "," + Util.getKeyByValue(Util.pieceMap, winningMove.gamePiece) + ")");    
     }
     
@@ -121,7 +128,7 @@ public class Jarvis {
             }
         }
 
-        GameTree gameTree = new GameTree(gameBoard);
+        GameTree gameTree = new GameTree(gameBoard, movesDepth);
         return gameTree;
     }
 }
