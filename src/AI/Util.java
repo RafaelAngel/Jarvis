@@ -16,6 +16,9 @@ import java.util.Map.Entry;
 public final class Util {
     
     private static String ttyConfig;
+    
+    public static int gameHeight;
+    public static int gameWidth;
 
     public static final HashMap<String, Byte> pieceMap = new HashMap<String, Byte>();
     public static final HashMap<String, Integer> winMap = new HashMap<String, Integer>();
@@ -54,7 +57,11 @@ public final class Util {
         while(parent.parent != null){
             parent = parent.parent;
         }        
-        byte[][] gameBoard = parent.gameTree.gameBoard;
+        byte[][] gameBoard = parent.gameTree.gameBoard.clone();
+        int i = 0;
+        for(byte[] gameRow: parent.gameTree.gameBoard){
+            gameBoard[i++] = gameRow.clone();
+        }
         
         Stack<Util.Move> moves = new Stack<Util.Move>();
 

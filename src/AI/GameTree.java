@@ -62,14 +62,22 @@ public class GameTree {
         
         for(int i = 0; i < boardWidth; i++)
         {
+            //Count number of pieces already in the column
             GameNode countingNode = currNode.parent;
             int piecesInColumn = 0;
             while(countingNode != null){
                 if( countingNode.column == i){
                     piecesInColumn++;
                 }
+                if(countingNode.parent == null){
+                    int r;
+                    for(r = 0; countingNode.gameTree.gameBoard[i + 3][r + 3] != Util.gamePiece_s; r++){}
+                    piecesInColumn += r;
+                    break;
+                }
                 countingNode = countingNode.parent;
             }
+            
             if(piecesInColumn < boardHeight){
                 //add coloured node
                 currNode.children[i] = new GameNode(currNode, i, colouredNode, boardWidth);
@@ -88,11 +96,18 @@ public class GameTree {
             }
             
             
+            //Count number of pieces already in the column
             countingNode = currNode.parent;
             piecesInColumn = 0;
             while(countingNode != null){
                 if( countingNode.column == i){
                     piecesInColumn++;
+                }
+                if(countingNode.parent == null){
+                    int r;
+                    for(r = 0; countingNode.gameTree.gameBoard[i + 3][r + 3] != Util.gamePiece_s; r++){}
+                    piecesInColumn += r;
+                    break;
                 }
                 countingNode = countingNode.parent;
             }
@@ -111,7 +126,7 @@ public class GameTree {
                 else{
                     GenerateChildren(currNode.children[(boardWidth)*2 - i - 1],newLevelsDeep,!isJarvisTurn);
                 }
-            }         
+            }  
         }
     }
 }

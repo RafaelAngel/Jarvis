@@ -29,6 +29,11 @@ public class IsWin {
                 break;
             }
         }
+        
+        if(y >= Util.gameHeight){
+            //TODO: this shouldn't ever be reached, but it is.
+            return 0;
+        }
     
         Byte[][] possibleWins = new Byte[13][4]; 
         

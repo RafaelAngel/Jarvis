@@ -44,18 +44,18 @@ public class GameNode {
         return score;
     }
     
-    public double calculateChildrensScore(int depth){
-        int totalScore = 0;
+    public double calculateChildrensScore(){
+        double totalScore = score;
         if(children == null || children.length == 0){
-            return score / depth;
+            return score;
         }        
         for(GameNode gameNode: children){
             if(gameNode == null){
                 continue;
             }
-            totalScore += gameNode.calculateChildrensScore(++depth);
+            totalScore += gameNode.calculateChildrensScore();
         }
-        return totalScore / depth;
+        return totalScore;
     }
 
 }

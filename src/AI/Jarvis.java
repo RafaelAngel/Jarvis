@@ -14,7 +14,7 @@ public class Jarvis {
     
     public static void main(String[] args) {
         
-        Util util = new Util();        
+        Util util = new Util();      
         String input = Util.getStandardInput();        
         
         GameTree gameTree = createGameTree(input);
@@ -26,7 +26,7 @@ public class Jarvis {
         //IsWin isWin = new IsWin();                    
         //int score = isWin.winFunction(gameTree.head, last_col);
         
-       // printBoard(gameTree.head.gameBoard);
+        //printBoard(gameTree.gameBoard);
         
         System.out.println("(" + (winningMove.column + 1) + "," + Util.getKeyByValue(Util.pieceMap, winningMove.gamePiece) + ")");    
     }
@@ -43,20 +43,31 @@ public class Jarvis {
     
     private static Util.Move findOptimalMove(GameNode gameNodeHead) {
         
-        GameNode bestGameBoard = gameNodeHead.children[7];
+        GameNode bestGameBoard = gameNodeHead.children[4];
         double highestScore = 0;
         
         for(GameNode gameNode: gameNodeHead.children){           
             if(gameNode.score > 0){
                 //immediate move to win
+                switch((int)gameNode.score){
+                    case 5:
+                        System.err.println("Initiating the clean slate protocol.");                        
+                        break;
+                    case 4:                        
+                        System.err.println("Test complete. Preparing to power down and begin diagnostics...");
+                        break;
+                    case 3:
+                        System.err.println("Upgrades are going well, Sir, but it seems when I get to the end of a sentence I say the wrong cranberry.");
+                        break;
+                    }                
                 return new Util.Move(gameNode);
             }
             if(gameNode.score < 0){
                 //immediate move to prevent a red win
                 return new Util.Move(gameNode.column, Util.gamePiece_s);
             } 
-            if(highestScore < gameNode.calculateChildrensScore(1)){
-                highestScore = gameNode.calculateChildrensScore(1);
+            if(highestScore < gameNode.calculateChildrensScore()){
+                highestScore = gameNode.calculateChildrensScore();
                 bestGameBoard = gameNode;
             }
         }
@@ -64,7 +75,7 @@ public class Jarvis {
         if(highestScore == 0){
             
             byte[][] gameBoard = Util.buildGameBoardFromNode(bestGameBoard);            
-            if(gameBoard[bestGameBoard.column][num_row + 3] == Util.gamePiece_s){
+            if(gameBoard[bestGameBoard.column + 3][num_row + 3] == Util.gamePiece_s){
                 return new Util.Move(bestGameBoard);
             }else{
                 int col = 0;
@@ -91,6 +102,9 @@ public class Jarvis {
             total_game_time = Integer.parseInt((String) tokenizer.nextElement());
             player1_time = Integer.parseInt((String) tokenizer.nextElement());
             last_move_time = Integer.parseInt((String) tokenizer.nextElement());
+            
+            Util.gameHeight = num_row;
+            Util.gameWidth = num_col;
         } catch (NumberFormatException e) {
             System.err.println("Invalid input: " + e);
             return null;
