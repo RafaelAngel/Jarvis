@@ -1,4 +1,4 @@
-package AI;
+//package AI;
 
 /***
  * A node that represents a paticular board setup in the decision tree.
@@ -74,4 +74,21 @@ public class GameNode {
         return totalScore / depth;
     }
 
+    /**
+     * Used for looking 1 level deep to see if there is a win condition for the opponent.
+     * Output will determine if an immediate move is needed to prevent a win.
+     * @return
+     */
+    public int preventChildVictory(){
+        
+        for(GameNode gameNode: children){
+            if(gameNode == null || gameNode.column == column){
+                continue;
+            }            
+            if(gameNode.score < 0){
+                return gameNode.column;
+            }
+        }
+        return 0;
+    }
 }

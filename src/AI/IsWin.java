@@ -1,4 +1,4 @@
-package AI;
+//package AI;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -13,7 +13,7 @@ public class IsWin {
         return calculateScore(gameBoard, last_col);
     }
 
-    private int calculateScore(byte[][] gameBoard, int last_col) {
+    public int calculateScore(byte[][] gameBoard, int last_col) {
         
         int blueScore_total = 0;
         int redScore_total = 0;

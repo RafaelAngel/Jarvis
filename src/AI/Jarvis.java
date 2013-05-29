@@ -1,5 +1,6 @@
-package AI;
+//package AI;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
@@ -17,24 +18,26 @@ public class Jarvis {
      */
     public static int movesDepth = 5;
     
+    private static IsWin isWin;
+    
     public static void main(String[] args) {
         
         Util util = new Util();      
         String input = Util.getStandardInput();        
-        long startTime = System.currentTimeMillis();
+        //long startTime = System.currentTimeMillis();
         GameTree gameTree = createGameTree(input);
         
         gameTree.GenerateChildren(gameTree.head, movesDepth, true);
         
         Util.Move winningMove = findOptimalMove(gameTree.head);
                 
-        //IsWin isWin = new IsWin();                    
+        isWin = new IsWin();                    
         //int score = isWin.winFunction(gameTree.head, last_col);
         
-        long elapsedTime = System.currentTimeMillis() - startTime;
-        printBoard(gameTree.gameBoard);
-        System.out.println("Time elapsed: " + elapsedTime);
-        System.out.println("Ident Boards Skipped: " + gameTree.nodesSkipped );
+        //long elapsedTime = System.currentTimeMillis() - startTime;
+        //printBoard(gameTree.gameBoard);
+        //System.out.println("Time elapsed: " + elapsedTime);
+        //System.out.println("Ident Boards Skipped: " + gameTree.nodesSkipped );
         System.out.println("(" + (winningMove.column + 1) + "," + Util.getKeyByValue(Util.pieceMap, winningMove.gamePiece) + ")");    
     }
     
@@ -53,6 +56,8 @@ public class Jarvis {
         GameNode bestGameBoard = gameNodeHead.children[4];
         double highestScore = 0;
         
+        ArrayList<GameNode> badMoves = new ArrayList<GameNode>();
+        
         for(GameNode gameNode: gameNodeHead.children){           
             if(gameNode.score > 0){
                 //immediate move to win
@@ -69,30 +74,46 @@ public class Jarvis {
                     }                
                 return new Util.Move(gameNode);
             }
-            if(gameNode.score < 0){
+            if(gameNode.preventChildVictory() > 0){
+                //immediate move to prevent a red win
+                return new Util.Move(gameNode.preventChildVictory(), Util.gamePiece_b);
+            }
+            /*if(gameNode.score < 0 || gameNode.calculateChildrenScore() < 0){
                 //immediate move to prevent a red win
                 return new Util.Move(gameNode.column, Util.gamePiece_b);
-            } 
+            } */
             if(highestScore < gameNode.calculateChildrensScore()){
                 highestScore = gameNode.calculateChildrensScore();
                 bestGameBoard = gameNode;
             }
-        }
+            
+            if(gameNode.calculateChildrensScore() < 0){
+                badMoves.add(gameNode);
+            }
+        }           
         
         if(highestScore == 0){
             
-            byte[][] gameBoard = Util.buildGameBoardFromNode(bestGameBoard);            
+            for(GameNode gameNode: gameNodeHead.children){
+                if(!badMoves.contains(gameNode)){
+                    return new Util.Move(gameNode);
+                }
+            }
+            
+            //If this point is reached, there are no 'good' moves. sadface
+            
+            /*byte[][] gameBoard = Util.buildGameBoardFromNode(bestGameBoard);            
             if(gameBoard[bestGameBoard.column + 3][num_row + 3] == Util.gamePiece_s){
                 return new Util.Move(bestGameBoard);
             }else{
                 int col = 0;
-                for(byte[] column: gameBoard){
+                for(byte[] column: Arrays.copyOfRange(gameBoard, 3, gameBoard.length)){
                     if(column[num_row + 3] == Util.gamePiece_s){
                         return new Util.Move(col,Util.gamePiece_b);
                     }
                     col++;
                 }
-            }
+            }*/
         }
         
         return new Util.Move(bestGameBoard);
