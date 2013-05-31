@@ -9,9 +9,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
-import java.util.Stack;
 import java.util.Map.Entry;
+import java.util.Queue;
+import java.util.Stack;
 
 public final class Util {
     
@@ -28,7 +30,11 @@ public final class Util {
     public static final byte gamePiece_g = new Byte((byte) 10);
     public static final byte gamePiece_s = new Byte((byte) 11);
     
+    public static IsWin isWin;
+    
     public Util(){
+        
+        isWin = new IsWin();
         
         pieceMap.put("r", gamePiece_r);
         pieceMap.put("b", gamePiece_b);
@@ -69,8 +75,9 @@ public final class Util {
             moves.add(new Util.Move(gameNode));
             gameNode = gameNode.parent;
         }
-        
-        for(Util.Move move: moves){
+
+        while(!moves.isEmpty()){
+            Move move = moves.pop();
             int row;
             for(row = 3; gameBoard[move.column + 3][row] != Util.gamePiece_s; row++){
                 if(row >= gameBoard[move.column + 3].length){

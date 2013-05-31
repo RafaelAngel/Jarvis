@@ -41,12 +41,17 @@ public class GameNode {
         children = new GameNode[boardWidth * 2];        
     }
     
-    public double calculateScore(IsWin isWin, int last_col){        
-        score = isWin.winFunction(this, last_col);        
+    public double calculateScore(IsWin isWin){        
+        score = isWin.winFunction(this);        
         return score;
     }
     
-    public double calculateChildrensScore(){
+    public double calculateHeuristic(){
+        //TODO: add heuristic to favour central columns
+        return calculateChildrenScores();
+    }
+    
+    public double calculateChildrenScores(){
         double totalScore = score; 
         
         int depth = 1;
@@ -56,24 +61,33 @@ public class GameNode {
             depth++;
         }
         
+        double weight = Math.pow(10, depth);
+        
         if(children == null || children.length == 0){
             if(identical!=null)
             {
-                return identical.calculateChildrensScore() + score / depth;
-                
+                return identical.calculateChildrenScores();                
             }
-            return score / depth;
+            if(score < 0){
+                return (score / weight) * 10;
+            }
+            return (score / weight);
         }       
-        
-        for(GameNode gameNode: children){
-            if(gameNode == null){
-                continue;
-            }
-            totalScore += gameNode.calculateChildrensScore();
-        }
-        return totalScore / depth;
-    }
 
+        if(preventChildVictory() == 0){
+            for(GameNode gameNode: children){
+                if(gameNode == null){
+                    continue;
+                }
+                totalScore += gameNode.calculateChildrenScores();
+            }
+        }
+        if(score < 0){
+            return (score / weight) * 10 + totalScore;
+        }
+        return (score / weight) + totalScore;
+    }
+    
     /**
      * Used for looking 1 level deep to see if there is a win condition for the opponent.
      * Output will determine if an immediate move is needed to prevent a win.
@@ -82,11 +96,11 @@ public class GameNode {
     public int preventChildVictory(){
         
         for(GameNode gameNode: children){
-            if(gameNode == null || gameNode.column == column){
+            if(gameNode == null){
                 continue;
-            }            
+            }
             if(gameNode.score < 0){
-                return gameNode.column;
+                return 1;
             }
         }
         return 0;

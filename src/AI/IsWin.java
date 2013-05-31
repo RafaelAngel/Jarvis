@@ -6,11 +6,11 @@ import java.util.Map.Entry;
 
 public class IsWin {
 
-    public int winFunction(GameNode gameNode, int last_col) {
+    public int winFunction(GameNode gameNode) {
         
         byte[][] gameBoard = Util.buildGameBoardFromNode(gameNode);
         
-        return calculateScore(gameBoard, last_col);
+        return calculateScore(gameBoard, gameNode.column);
     }
 
     public int calculateScore(byte[][] gameBoard, int last_col) {
@@ -74,7 +74,7 @@ public class IsWin {
             }
         }        
         
-        // No current win condition (game still in progress)
+        // No current win condition
         if(redScore_highest == 0 && blueScore_highest == 0){
             return 0;
         }

@@ -112,8 +112,6 @@ public class GameTree {
                             break;
                         }
                     }
-                    
-                    
                     if(identNode ==null){
                         currNode.children[i].board=childBoard;
                         dupeNodes.add(currNode.children[i]);
@@ -121,23 +119,20 @@ public class GameTree {
                     else{
                         nodesSkipped++;
                         currNode.children[i].identical=identNode;
-                        currNode.children[i].score = identNode.score;
-                        
-                        
+                        currNode.children[i].score = identNode.score;                 
+                        currNode.children[i].children = null;
                     }
                 }
             }
-            
-            
             if(currNode.children[i] != null){            
-                score = currNode.children[i].calculateScore(isWin, i);
+                score = currNode.children[i].calculateScore(isWin);
                 if(score > 0){
-                    //TODO: win condition, somehow break out of recursion and play this piece
+                    //TODO: win condition, somehow break out of recursion and play this piece if on level 1
                 }
                 else if(score < 0){
                     //lose condition - do nothing, don't generate more children
                 }
-                else{
+                else if(currNode.children[i].children != null){
                     GenerateChildren(currNode.children[i],newLevelsDeep,!isJarvisTurn);
                 }
             }
@@ -159,7 +154,7 @@ public class GameTree {
                 countingNode = countingNode.parent;
             }
             if(piecesInColumn < boardHeight){
-                //add green node
+                //add green node if on level 1
                 currNode.children[(boardWidth)*2 - i - 1] = new GameNode(currNode, i, greenColouredNode, boardWidth);
                 
                 if (this.depth-levelsDeep+1 == dupeLevelToCheck)
@@ -174,8 +169,6 @@ public class GameTree {
                             break;
                         }
                     }
-                    
-                    
                     if(identNode ==null){
                         currNode.children[(boardWidth)*2 - i - 1].board=childBoard;
                         dupeNodes.add(currNode.children[(boardWidth)*2 - i - 1]);
@@ -183,23 +176,20 @@ public class GameTree {
                     else{
                         nodesSkipped++;
                         currNode.children[(boardWidth)*2 - i - 1].identical=identNode;
-                        currNode.children[(boardWidth)*2 - i - 1].score = identNode.score;
-                        
+                        currNode.children[(boardWidth)*2 - i - 1].score = identNode.score;                        
                         currNode.children[(boardWidth)*2 - i - 1].children = null;
                     }
                 }
             }
-            
-            
             if(currNode.children[(boardWidth)*2 - i - 1] !=null){
-                score = currNode.children[(boardWidth)*2 - i - 1].calculateScore(isWin, i);
+                score = currNode.children[(boardWidth)*2 - i - 1].calculateScore(isWin);
                 if(score > 0){
-                    //TODO: win condition, somehow break out of recursion
+                    //TODO: win condition, somehow break out of recursion if on level 1
                 }
                 else if(score < 0){
                     //lose condition - do nothing, don't generate more children
                 }
-                else{
+                else if(currNode.children[(boardWidth)*2 - i - 1].children != null){
                     GenerateChildren(currNode.children[(boardWidth)*2 - i - 1],newLevelsDeep,!isJarvisTurn);
                 }
             }  

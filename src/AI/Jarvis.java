@@ -42,7 +42,7 @@ public class Jarvis {
     }
     
     private static void printBoard(byte[][] gameBoard){
-        // prints the game board (will be rotated 90 degress)
+        // prints the game board (will be rotated 90 degress)gameTree
          for (int x = 0; x < num_col; x++) {
              for (int y = 0; y < num_row; y++) {
                  System.out.print(Util.getKeyByValue(Util.pieceMap, gameBoard[x + 3][y + 3]));
@@ -54,7 +54,8 @@ public class Jarvis {
     private static Util.Move findOptimalMove(GameNode gameNodeHead) {
         
         GameNode bestGameBoard = gameNodeHead.children[4];
-        double highestScore = 0;
+        double highestScore = -10;
+        double heuristic;
         
         ArrayList<GameNode> badMoves = new ArrayList<GameNode>();
         
@@ -74,48 +75,41 @@ public class Jarvis {
                     }                
                 return new Util.Move(gameNode);
             }
+            heuristic = gameNode.calculateHeuristic();
             if(gameNode.preventChildVictory() > 0){
-                //immediate move to prevent a red win
-                return new Util.Move(gameNode.preventChildVictory(), Util.gamePiece_b);
-            }
-            /*if(gameNode.score < 0 || gameNode.calculateChildrenScore() < 0){
-                //immediate move to prevent a red win
-                return new Util.Move(gameNode.column, Util.gamePiece_b);
-            } */
-            if(highestScore < gameNode.calculateChildrensScore()){
-                highestScore = gameNode.calculateChildrensScore();
-                bestGameBoard = gameNode;
-            }
-            
-            if(gameNode.calculateChildrensScore() < 0){
+                if(highestScore < heuristic){
+                    highestScore = heuristic;
+                    bestGameBoard = gameNode;
+                }        
+            }    
+            else{
                 badMoves.add(gameNode);
             }
-        }           
-        
-        if(highestScore == 0){
-            
-            for(GameNode gameNode: gameNodeHead.children){
-                if(!badMoves.contains(gameNode)){
-                    return new Util.Move(gameNode);
-                }
-            }
-            
-            //If this point is reached, there are no 'good' moves. sadface
-            
-            /*byte[][] gameBoard = Util.buildGameBoardFromNode(bestGameBoard);            
-            if(gameBoard[bestGameBoard.column + 3][num_row + 3] == Util.gamePiece_s){
-                return new Util.Move(bestGameBoard);
-            }else{
-                int col = 0;
-                for(byte[] column: Arrays.copyOfRange(gameBoard, 3, gameBoard.length)){
-                    if(column[num_row + 3] == Util.gamePiece_s){
-                        return new Util.Move(col,Util.gamePiece_b);
+            //System.out.println(gameNode.column + ": " + gameNode.score + ", piece: " + gameNode.gamePiece + ", children score: " + heuristic);
+/*            if(gameNode.column == 5 && gameNode.gamePiece == Util.gamePiece_b){
+                for(GameNode child: gameNode.children){
+                    if(child.column == 5){
+                        System.out.println(child.column + ": " + child.score + ", piece: " + child.gamePiece + ", children score: " + child.calculateHeuristic());
+                        child.calculateScore(new IsWin());
                     }
-                    col++;
                 }
             }*/
-        }
+        }           
         
+        for(GameNode gameNode: gameNodeHead.children){                           
+            heuristic = gameNode.calculateHeuristic();
+            if(highestScore < heuristic){
+                highestScore = heuristic;
+                bestGameBoard = gameNode;
+            }                    
+        }        
+
+        for(byte[] column: Arrays.copyOfRange(gameNodeHead.gameTree.gameBoard, 3, num_col + 3)){                           
+             if(column[num_row + 3] == Util.gamePiece_s){
+                 return new Util.Move(bestGameBoard);
+             }
+        } 
+
         return new Util.Move(bestGameBoard);
     }
     
