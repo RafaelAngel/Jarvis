@@ -70,7 +70,6 @@ public class IsWin {
                         redScore_highest = score;
                     }               
                 }
-                gameBoard[x+3][y+3] = Util.gamePiece_s;
             }
         }        
         

@@ -75,29 +75,26 @@ public class Jarvis {
                     }                
                 return new Util.Move(gameNode);
             }
-            heuristic = gameNode.calculateHeuristic();
-            if(gameNode.preventChildVictory() > 0){
-                if(highestScore < heuristic){
-                    highestScore = heuristic;
-                    bestGameBoard = gameNode;
-                }        
-            }    
-            else{
+            if(gameNode.preventChildVictory() == 1 || gameNode.score < 0){
                 badMoves.add(gameNode);
             }
             //System.out.println(gameNode.column + ": " + gameNode.score + ", piece: " + gameNode.gamePiece + ", children score: " + heuristic);
-/*            if(gameNode.column == 5 && gameNode.gamePiece == Util.gamePiece_b){
+/*            if(gameNode.column == 0 && gameNode.gamePiece == Util.gamePiece_b){
+                System.out.println("heuristic: " + gameNode.calculateHeuristic());
                 for(GameNode child: gameNode.children){
-                    if(child.column == 5){
+                    if(child.column == 1){
                         System.out.println(child.column + ": " + child.score + ", piece: " + child.gamePiece + ", children score: " + child.calculateHeuristic());
-                        child.calculateScore(new IsWin());
                     }
                 }
             }*/
         }           
         
-        for(GameNode gameNode: gameNodeHead.children){                           
+        for(GameNode gameNode: gameNodeHead.children){ 
+            if(badMoves.contains(gameNode)) continue;
             heuristic = gameNode.calculateHeuristic();
+            if(gameNode.gamePiece == Util.gamePiece_g){
+                heuristic = heuristic / 2;
+            }
             if(highestScore < heuristic){
                 highestScore = heuristic;
                 bestGameBoard = gameNode;

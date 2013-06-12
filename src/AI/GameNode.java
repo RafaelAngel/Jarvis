@@ -73,14 +73,11 @@ public class GameNode {
             }
             return (score / weight);
         }       
-
-        if(preventChildVictory() == 0){
-            for(GameNode gameNode: children){
-                if(gameNode == null){
-                    continue;
-                }
-                totalScore += gameNode.calculateChildrenScores();
+        for(GameNode gameNode: children){
+            if(gameNode == null){
+                continue;
             }
+            totalScore += gameNode.calculateChildrenScores();
         }
         if(score < 0){
             return (score / weight) * 10 + totalScore;
