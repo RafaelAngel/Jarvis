@@ -83,6 +83,9 @@ public class GameTree {
         {
             //Count number of pieces already in the column
             GameNode countingNode = currNode.parent;
+            if(countingNode == null){
+                countingNode = currNode;
+            }
             int piecesInColumn = 0;
             while(countingNode != null){
                 if( countingNode.column == i){

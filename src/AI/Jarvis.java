@@ -53,13 +53,16 @@ public class Jarvis {
     
     private static Util.Move findOptimalMove(GameNode gameNodeHead) {
         
-        GameNode bestGameBoard = gameNodeHead.children[4];
+        GameNode bestGameBoard = null;
         double highestScore = -10;
         double heuristic;
         
         ArrayList<GameNode> badMoves = new ArrayList<GameNode>();
         
-        for(GameNode gameNode: gameNodeHead.children){           
+        //Find if any immediate move will result in a win
+        //also builds badMoves list, list of nodes that will result in immediate opponent victor
+        for(GameNode gameNode: gameNodeHead.children){       
+            if(gameNode == null) continue;
             if(gameNode.score > 0){
                 //immediate move to win
                 switch((int)gameNode.score){
@@ -89,24 +92,43 @@ public class Jarvis {
             }*/
         }           
         
+        //Finds best move ignoring badMoves List
         for(GameNode gameNode: gameNodeHead.children){ 
+            if(gameNode == null) continue;
             if(badMoves.contains(gameNode)) continue;
             heuristic = gameNode.calculateHeuristic();
-            if(gameNode.gamePiece == Util.gamePiece_g){
+            /*if(gameNode.gamePiece == Util.gamePiece_g){
                 heuristic = heuristic / 2;
-            }
+            }*/
             if(highestScore < heuristic){
                 highestScore = heuristic;
                 bestGameBoard = gameNode;
             }                    
         }        
-
+        
+        //If no bestGameBoard is chosen, find column with available space starting from the center column, expanding outwards
+        if(bestGameBoard == null){
+            int start = (int) Math.floor(Util.gameWidth / 2) - 1;
+            for(int col = 0; col < start ; col++){
+                byte[] column = gameNodeHead.gameTree.gameBoard[start + 3 + col];   
+                if(column[num_row + 2] == Util.gamePiece_s){
+                    return new Util.Move(start + col, Util.gamePiece_b);
+                }
+                column = gameNodeHead.gameTree.gameBoard[start + 3 - col];  
+                if(column[num_row + 2] == Util.gamePiece_s){
+                    return new Util.Move(start - col, Util.gamePiece_b);
+                }                
+            }
+        }
+        
+        //ensures the chosen bestGameBoard has a free space in top position
         for(byte[] column: Arrays.copyOfRange(gameNodeHead.gameTree.gameBoard, 3, num_col + 3)){                           
-             if(column[num_row + 3] == Util.gamePiece_s){
+             if(column[num_row + 2] == Util.gamePiece_s){
                  return new Util.Move(bestGameBoard);
              }
         } 
 
+        //This shot not occur
         return new Util.Move(bestGameBoard);
     }
     
