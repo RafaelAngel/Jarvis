@@ -15,7 +15,7 @@ public class GameNode {
     public byte gamePiece;
     public int column;
     public byte[][] board=null;
-    public double score = 0;
+    public int score = 0;
     public double childrenScore = 0;
 
     /**

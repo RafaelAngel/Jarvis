@@ -51,7 +51,55 @@ public class Jarvis {
          }
     }
     
-    private static Util.Move findOptimalMove(GameNode gameNodeHead) {
+    private static int player_minimax(GameNode node, int depth){
+        if(node.score != 0 || node.children == null){
+            return node.score;
+        }
+        if( depth < 0 ){
+            return 0;
+        }
+        Integer alpha = Integer.MIN_VALUE;
+        for(GameNode child: node.children){
+            if(child == null) continue;
+            alpha = Math.max(alpha, oponent_minimax(child, depth - 1));
+        }
+        return alpha;
+    }
+    
+    private static int oponent_minimax(GameNode node, int depth){
+        if(node.score != 0 || node.children == null){
+            return node.score;
+        }
+        if( depth < 0 ){
+            return 0;
+        }
+        Integer alpha = Integer.MAX_VALUE;
+        for(GameNode child: node.children){
+            if(child == null) continue;
+            alpha = Math.min(alpha, player_minimax(child, depth - 1));
+        }
+        return alpha;
+    }
+    
+    private static Util.Move findOptimalMove(GameNode gameNodeHead){
+        
+        int highscore = Integer.MIN_VALUE;
+        GameNode bestGameBoard = null;        
+        
+        for(GameNode child: gameNodeHead.children){
+            int score = player_minimax(child,movesDepth);
+            if(score == Integer.MIN_VALUE) score = 0;
+            //System.out.println(score);
+            if(score > highscore){
+                bestGameBoard = child;
+                highscore = score;
+            }
+        }
+        
+        return new Util.Move(bestGameBoard);        
+    }
+    
+    /*private static Util.Move findOptimalMove(GameNode gameNodeHead) {
         
         GameNode bestGameBoard = null;
         double highestScore = -10;
@@ -81,15 +129,6 @@ public class Jarvis {
             if(gameNode.preventChildVictory() == 1 || gameNode.score < 0){
                 badMoves.add(gameNode);
             }
-            //System.out.println(gameNode.column + ": " + gameNode.score + ", piece: " + gameNode.gamePiece + ", children score: " + heuristic);
-/*            if(gameNode.column == 0 && gameNode.gamePiece == Util.gamePiece_b){
-                System.out.println("heuristic: " + gameNode.calculateHeuristic());
-                for(GameNode child: gameNode.children){
-                    if(child.column == 1){
-                        System.out.println(child.column + ": " + child.score + ", piece: " + child.gamePiece + ", children score: " + child.calculateHeuristic());
-                    }
-                }
-            }*/
         }           
         
         //Finds best move ignoring badMoves List
@@ -97,9 +136,6 @@ public class Jarvis {
             if(gameNode == null) continue;
             if(badMoves.contains(gameNode)) continue;
             heuristic = gameNode.calculateHeuristic();
-            /*if(gameNode.gamePiece == Util.gamePiece_g){
-                heuristic = heuristic / 2;
-            }*/
             if(highestScore < heuristic){
                 highestScore = heuristic;
                 bestGameBoard = gameNode;
@@ -130,7 +166,7 @@ public class Jarvis {
 
         //This shot not occur
         return new Util.Move(bestGameBoard);
-    }
+    }*/
     
     private static GameTree createGameTree(String input){
         
