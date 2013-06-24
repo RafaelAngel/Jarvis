@@ -51,45 +51,65 @@ public class Jarvis {
          }
     }
     
-    private static int player_minimax(GameNode node, int depth){
+    private static int player_minimax(GameNode node){
         if(node.score != 0 || node.children == null){
             return node.score;
         }
-        if( depth < 0 ){
-            return 0;
-        }
-        Integer alpha = Integer.MIN_VALUE;
+        boolean isempty = true;
         for(GameNode child: node.children){
-            if(child == null) continue;
-            alpha = Math.max(alpha, oponent_minimax(child, depth - 1));
+            if(child != null){
+                isempty = false;
+                break;
+            }
         }
-        return alpha;
-    }
-    
-    private static int oponent_minimax(GameNode node, int depth){
-        if(node.score != 0 || node.children == null){
-            return node.score;
-        }
-        if( depth < 0 ){
+        if(isempty){
             return 0;
         }
         Integer alpha = Integer.MAX_VALUE;
         for(GameNode child: node.children){
             if(child == null) continue;
-            alpha = Math.min(alpha, player_minimax(child, depth - 1));
+            alpha = Math.min(alpha, oponent_minimax(child));
+        }
+        return alpha;
+    }
+    
+    private static int oponent_minimax(GameNode node){
+        if(node.score != 0 || node.children == null){
+            return node.score;
+        }
+        boolean isempty = true;
+        for(GameNode child: node.children){
+            if(child != null){
+                isempty = false;
+                break;
+            }
+        }
+        if(isempty){
+            return 0;
+        }
+        Integer alpha = Integer.MIN_VALUE;
+        for(GameNode child: node.children){
+            if(child == null) continue;
+            alpha = Math.max(alpha, player_minimax(child));
         }
         return alpha;
     }
     
     private static Util.Move findOptimalMove(GameNode gameNodeHead){
         
-        int highscore = Integer.MIN_VALUE;
+        double highscore = Integer.MIN_VALUE;
         GameNode bestGameBoard = null;        
         
         for(GameNode child: gameNodeHead.children){
-            int score = player_minimax(child,movesDepth);
+            if(child == null) continue;
+            
+            double score = player_minimax(child);
             if(score == Integer.MIN_VALUE) score = 0;
+            
+            //Give higher weighting to central columns. Will add maximum of 0.5 score
+            score = score + 1/(Math.exp(Math.pow(child.column - Util.gameWidth/2,2)))/2;            
             //System.out.println(score);
+            
             if(score > highscore){
                 bestGameBoard = child;
                 highscore = score;
