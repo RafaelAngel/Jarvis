@@ -1,4 +1,4 @@
-//package AI;
+package AI;
 
 /***
  * A node that represents a paticular board setup in the decision tree.
@@ -14,7 +14,7 @@ public class GameNode {
     public GameNode[] children;
     public byte gamePiece;
     public int column;
-    public byte[][] board=null;
+    public byte[][] board = null;
     public int score = 0;
     public double childrenScore = 0;
 

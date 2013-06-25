@@ -1,4 +1,4 @@
-//package AI;
+package AI;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -143,6 +143,9 @@ public class GameTree {
             
             //Count number of pieces already in the column
             countingNode = currNode.parent;
+            if(countingNode == null){
+                countingNode = currNode;
+            }
             piecesInColumn = 0;
             while(countingNode != null){
                 if( countingNode.column == i){

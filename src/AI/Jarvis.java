@@ -1,4 +1,4 @@
-//package AI;
+package AI;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -104,11 +104,14 @@ public class Jarvis {
             if(child == null) continue;
             
             double score = player_minimax(child);
+            
+            System.out.print("Column: " + child.column + "  Unadjusted: " + score + "  Adjusted: ");
+            
             if(score == Integer.MIN_VALUE) score = 0;
             
             //Give higher weighting to central columns. Will add maximum of 0.5 score
             score = score + 1/(Math.exp(Math.pow(child.column - Util.gameWidth/2,2)))/2;            
-            //System.out.println(score);
+            System.out.println(score);
             
             if(score > highscore){
                 bestGameBoard = child;
