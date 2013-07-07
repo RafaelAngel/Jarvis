@@ -1,4 +1,4 @@
-package AI;
+//package AI;
 
 /*
 * non-blocking console input courtesy of http://www.darkcoding.net/software/non-blocking-console-io-is-not-possible/
@@ -7,12 +7,9 @@ package AI;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Queue;
 import java.util.Stack;
 
 public final class Util {
@@ -23,12 +20,13 @@ public final class Util {
     public static int gameWidth;
 
     public static final HashMap<String, Byte> pieceMap = new HashMap<String, Byte>();
-    public static final HashMap<String, Integer> winMap = new HashMap<String, Integer>();
+    
+    public static final byte[] winMap = new byte[256];
 
-    public static final byte gamePiece_r = new Byte((byte) 00);
-    public static final byte gamePiece_b = new Byte((byte) 01);
-    public static final byte gamePiece_g = new Byte((byte) 10);
-    public static final byte gamePiece_s = new Byte((byte) 11);
+    public static final byte gamePiece_r = 1;
+    public static final byte gamePiece_b = 2;
+    public static final byte gamePiece_g = 3;
+    public static final byte gamePiece_s = 0;
     
     public static IsWin isWin;
     
@@ -41,19 +39,19 @@ public final class Util {
         pieceMap.put("g", gamePiece_g);
         pieceMap.put("s", gamePiece_s);
 
-        winMap.put(Arrays.toString(new Byte[] { gamePiece_b, gamePiece_b, gamePiece_g, gamePiece_g }), 5);
-        winMap.put(Arrays.toString(new Byte[] { gamePiece_g, gamePiece_g, gamePiece_b, gamePiece_b }), 5);
-        winMap.put(Arrays.toString(new Byte[] { gamePiece_b, gamePiece_g, gamePiece_g, gamePiece_b }), 4);
-        winMap.put(Arrays.toString(new Byte[] { gamePiece_g, gamePiece_b, gamePiece_b, gamePiece_g }), 4);
-        winMap.put(Arrays.toString(new Byte[] { gamePiece_b, gamePiece_g, gamePiece_b, gamePiece_g }), 3);
-        winMap.put(Arrays.toString(new Byte[] { gamePiece_g, gamePiece_b, gamePiece_g, gamePiece_b }), 3);
+        winMap[gamePiece_b << 6 | gamePiece_b << 4 | gamePiece_g << 2 | gamePiece_g] = 5;
+        winMap[gamePiece_g << 6 | gamePiece_g << 4 | gamePiece_b << 2 | gamePiece_b] = 5;
+        winMap[gamePiece_b << 6 | gamePiece_g << 4 | gamePiece_g << 2 | gamePiece_b] = 4;
+        winMap[gamePiece_g << 6 | gamePiece_b << 4 | gamePiece_b << 2 | gamePiece_g] = 4;
+        winMap[gamePiece_b << 6 | gamePiece_g << 4 | gamePiece_b << 2 | gamePiece_g] = 3;
+        winMap[gamePiece_g << 6 | gamePiece_b << 4 | gamePiece_g << 2 | gamePiece_b] = 3;
 
-        winMap.put(Arrays.toString(new Byte[] { gamePiece_r, gamePiece_r, gamePiece_g, gamePiece_g }), -5);
-        winMap.put(Arrays.toString(new Byte[] { gamePiece_g, gamePiece_g, gamePiece_r, gamePiece_r }), -5);
-        winMap.put(Arrays.toString(new Byte[] { gamePiece_r, gamePiece_g, gamePiece_g, gamePiece_r }), -4);
-        winMap.put(Arrays.toString(new Byte[] { gamePiece_g, gamePiece_r, gamePiece_r, gamePiece_g }), -4);
-        winMap.put(Arrays.toString(new Byte[] { gamePiece_r, gamePiece_g, gamePiece_r, gamePiece_g }), -3);
-        winMap.put(Arrays.toString(new Byte[] { gamePiece_g, gamePiece_r, gamePiece_g, gamePiece_r }), -3);
+        winMap[gamePiece_r << 6 | gamePiece_r << 4 | gamePiece_g << 2 | gamePiece_g] = -5;
+        winMap[gamePiece_g << 6 | gamePiece_g << 4 | gamePiece_r << 2 | gamePiece_r] = -5;
+        winMap[gamePiece_r << 6 | gamePiece_g << 4 | gamePiece_g << 2 | gamePiece_r] = -4;
+        winMap[gamePiece_g << 6 | gamePiece_r << 4 | gamePiece_r << 2 | gamePiece_g] = -4;
+        winMap[gamePiece_r << 6 | gamePiece_g << 4 | gamePiece_r << 2 | gamePiece_g] = -3;
+        winMap[gamePiece_g << 6 | gamePiece_r << 4 | gamePiece_g << 2 | gamePiece_r] = -3;
         
     }
 
@@ -90,7 +88,11 @@ public final class Util {
         return gameBoard;
     }
     
-    public static class Move{
+    public static class Move implements Cloneable{
+        int column = 0;
+        byte gamePiece;
+        int score = 0;
+        public Move(){};
         public Move(GameNode gameNode) {
             column = gameNode.column;
             gamePiece = gameNode.gamePiece;
@@ -99,8 +101,19 @@ public final class Util {
             column = col;
             gamePiece = gamepiece;
         }
-        int column;
-        byte gamePiece;
+        public Move(int col, int score) {
+            column = col;
+            this.score = score;
+        }
+        public Move(int col, int score, byte gamePiece){
+            column = col;
+            this.score = score;
+            this.gamePiece = gamePiece;
+        }
+        @Override
+        protected Move clone() {
+            return new Move(this.column, this.score, this.gamePiece);
+        }
     }
     
     public static <T, E> T getKeyByValue(Map<T, E> map, E value) {

@@ -1,4 +1,4 @@
-package AI;
+//package AI;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,40 +6,52 @@ import java.util.Arrays;
 public class GameTree {
     
     public byte[][] gameBoard;
-    public GameNode head;
     public int boardWidth;
     public int boardHeight;
-    public IsWin isWin;
-    public int depth;
+    public int tops[];
+    public int pieceCount;
     
+    public GameNode head;        
+    public int depth;        
     public int nodesSkipped=0;
+    
+    public IsWin isWin;
     
     public int dupeLevelToCheck = 3;
     public ArrayList<GameNode> dupeNodes = new ArrayList<GameNode>();
+    
     /**
      * Basic GameTree constructor that makes an empty game tree
      * 
      * @param num_col Number of columns in the game
      * @param num_row Number of rows in the game
      */
-    public GameTree(int num_col, int num_row, int depth)
+    public GameTree(int num_col, int num_row)
     {
-        gameBoard = new byte[num_col+6][num_row+6];
-        
-        head = new GameNode(num_col, this);
-        
+        gameBoard = new byte[num_col+6][num_row+6];                
         boardWidth = num_col;
-        boardHeight = num_row;
+        boardHeight = num_row;    
+        pieceCount = 0;    
         
-        this.depth=depth;
-        isWin = new IsWin();
+        tops = new int[boardWidth];
+        Arrays.fill(tops, 0);        
+    }
+    
+    public void insertPiece(int column, byte piece){
+        this.gameBoard[column + 3][this.tops[column]++ + 3] = piece;
+        pieceCount++;
+    }
+    
+    public void removePiece(int column){
+        this.gameBoard[column + 3][--this.tops[column] + 3] = Util.gamePiece_s;
+        pieceCount--;
     }
     
     /**
      * Creates a GameTree from the formatted from file boardInfo
      * @param boardInfo
      */
-    public GameTree(byte[][] gameData, int depth)
+    /*public GameTree(byte[][] gameData, int depth)
     {
         gameBoard = gameData;        
         head = new GameNode(gameData.length - 6, this);
@@ -49,7 +61,7 @@ public class GameTree {
         
         this.depth=depth;
         isWin = new IsWin();
-    }
+    }*/
    
     
     /**
@@ -59,7 +71,7 @@ public class GameTree {
      * @param levelsDeep
      * @param isJarvisTurn
      */
-    public void GenerateChildren(GameNode currNode, int levelsDeep, boolean isJarvisTurn)
+    /*public void GenerateChildren(GameNode currNode, int levelsDeep, boolean isJarvisTurn)
     {   
         double score;
         
@@ -200,5 +212,5 @@ public class GameTree {
                 }
             }  
         }
-    }
+    }*/
 }

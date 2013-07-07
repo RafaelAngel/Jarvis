@@ -1,4 +1,11 @@
-package AI;
+//package AI;
+
+//
+//
+// DEPRICATED, NOT IN USE
+//
+//  will remove later.
+
 
 /***
  * A node that represents a paticular board setup in the decision tree.
@@ -41,10 +48,10 @@ public class GameNode {
         children = new GameNode[boardWidth * 2];        
     }
     
-    public double calculateScore(IsWin isWin){        
+    /*public double calculateScore(IsWin isWin){        
         score = isWin.winFunction(this);        
         return score;
-    }
+    }*/
     
     public double calculateHeuristic(){
         //TODO: add heuristic to favour central columns
