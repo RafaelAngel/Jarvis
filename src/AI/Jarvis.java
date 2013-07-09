@@ -27,7 +27,8 @@ public class Jarvis {
         String input = Util.getStandardInput();        
         GameTree gameTree = createGameTree(input);
         int numWins[] = Util.numPossibleWins(gameTree, 6);
-        System.err.println("Blue wins: "+ numWins[0]+"Red wins: "+numWins[1]);
+        System.err.println("Blue wins: "+ numWins[0]+" Red wins: "+numWins[1]);
+        printBoard(gameTree.gameBoard);
         isWin = new IsWin();           
 
         long startTime = System.currentTimeMillis();

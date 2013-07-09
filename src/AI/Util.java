@@ -28,7 +28,7 @@ public final class Util {
     public static final byte gamePiece_b = 2;
     public static final byte gamePiece_g = 3;
     public static final byte gamePiece_s = 0;
-    public static final byte gamePiece_e = 4;
+    public static final byte gamePiece_e = -1;
     
     public static IsWin isWin;
     
@@ -297,7 +297,7 @@ public final class Util {
         int[] possibleWins = new int[13]; 
         
         int x = col;
-        int y = tree.tops[x];
+        int y = tree.tops[x]-1;
         if(y >= tree.boardHeight){
             return numWins;
         }
@@ -319,7 +319,7 @@ public final class Util {
         possibleWins[11] = (gameBoard[x + 3][y + 3] << 6 | gameBoard[x + 4][y + 2] << 4 | gameBoard[x + 5][y + 1] << 2 | gameBoard[x + 6][y]);
         
         // Vertical wins
-        possibleWins[12] =  (byte) (gameBoard[x + 3][y + 3]<< 6 | gameBoard[x + 3][y + 2]<< 4 | gameBoard[x + 3][y + 1]<< 2 | gameBoard[x + 3][y]);
+        possibleWins[12] =  (gameBoard[x + 3][y + 3]<< 6 | gameBoard[x + 3][y + 2]<< 4 | gameBoard[x + 3][y + 1]<< 2 | gameBoard[x + 3][y]);
         
         for(int possibleWin: possibleWins){
            
