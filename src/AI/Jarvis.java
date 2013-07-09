@@ -37,7 +37,7 @@ public class Jarvis {
         for(;;){
             winningMove = findOptimalMove(gameTree);
             long taken = System.currentTimeMillis() - startTime;
-            if(taken > 1000 || gameTree.pieceCount < 4){ //TODO: use actual game times
+            if(taken > 1200 || gameTree.pieceCount < 4 || gameDepth > (num_col*num_row - gameTree.pieceCount)){ //TODO: use actual game times
                 break;
             }
             gameDepth++;
@@ -111,9 +111,9 @@ public class Jarvis {
             }
         }
         
-        /*if(alpha.score == Integer.MIN_VALUE){
-            alpha.score = Integer.MAX_VALUE;
-        }*/
+        if(alpha.score == Integer.MIN_VALUE){
+            alpha.score = 0;
+        }
         return alpha;
     }
     
@@ -171,9 +171,9 @@ public class Jarvis {
             }
         }
 
-        /*if(beta.score == Integer.MAX_VALUE){
-            beta.score = Integer.MIN_VALUE;
-        }*/
+        if(beta.score == Integer.MAX_VALUE){
+            beta.score = 0;
+        }
         return beta;
     }
     
@@ -219,10 +219,11 @@ public class Jarvis {
             gameTree.insertPiece(column, Util.gamePiece_b);
             move = min(gameTree, gameDepth, lastMove, new Move(0, Integer.MIN_VALUE, Util.gamePiece_b), new Move(0, Integer.MAX_VALUE, Util.gamePiece_r));       
             gameTree.removePiece(column);
-            //System.out.print("Piece: " + Util.gamePiece_b + "  Column: " + (column+1) + "  Unadjusted: " + move.score + "  Adjusted: ");                        
+            //
+            System.out.print("Piece: " + Util.gamePiece_b + "  Column: " + (column+1) + "  Unadjusted: " + move.score + "  Adjusted: ");                        
             //Give higher weighting to central columns. Will add maximum of 0.5 score
             double score = move.score + 1/(Math.exp(Math.pow(column - Util.gameWidth/2,2)))/2;            
-            //System.out.println(score);            
+            System.out.println(score);            
             if(score > highscore){
                 bestMove.gamePiece = Util.gamePiece_b;
                 bestMove.column = column;
@@ -236,10 +237,11 @@ public class Jarvis {
             gameTree.insertPiece(column, Util.gamePiece_g);
             move = min(gameTree, gameDepth, lastMove, new Move(0, Integer.MIN_VALUE, Util.gamePiece_b), new Move(0, Integer.MAX_VALUE, Util.gamePiece_r));     
             gameTree.removePiece(column);       
-            //System.out.print("Piece: " + Util.gamePiece_g + "  Column: " + (column+1) + "  Unadjusted: " + move.score + "  Adjusted: ");                        
+            //
+            System.out.print("Piece: " + Util.gamePiece_g + "  Column: " + (column+1) + "  Unadjusted: " + move.score + "  Adjusted: ");                        
             //Give higher weighting to central columns. Will add maximum of 0.5 score
             score = move.score + 1/(Math.exp(Math.pow(column - Util.gameWidth/2,2)))/2;            
-            //System.out.println(score);            
+            System.out.println(score);            
             if(score > highscore){
                 bestMove.gamePiece = Util.gamePiece_g;
                 bestMove.column = column;
