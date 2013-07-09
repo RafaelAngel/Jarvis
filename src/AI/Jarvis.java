@@ -85,7 +85,7 @@ public class Jarvis {
             lastMove.gamePiece = Util.gamePiece_b;
             lastMove.column = column;            
             val = min(node, depth, lastMove, alpha.clone(), beta.clone());
-            //val.score += Util.possibleWin(node.gameBoard,column) / 10;
+            val.score += Util.numPossibleWins(node,column)[0] / 10;
             node.removePiece(column);       
             if(val.score > alpha.score){
                 alpha.column = column;
@@ -101,7 +101,7 @@ public class Jarvis {
             lastMove.gamePiece = Util.gamePiece_g;
             lastMove.column = column;            
             val = min(node, depth, lastMove, alpha.clone(), beta.clone());
-            //val.score += Util.possibleWin(node.gameBoard,column) / 10;
+            val.score += Util.numPossibleWins(node,column)[0] / 10;
             node.removePiece(column);        
             if(val.score > alpha.score){
                 alpha.column = column;
@@ -149,7 +149,7 @@ public class Jarvis {
             lastMove.gamePiece = Util.gamePiece_r;
             lastMove.column = column;            
             val = max(node, depth, lastMove, alpha.clone(), beta.clone());
-            //val.score += Util.possibleWin(node.gameBoard,column) / 10;
+            val.score += Util.numPossibleWins(node,column)[0] / 10;
             node.removePiece(column);            
             if(val.score < beta.score){
                 beta.column = column;
@@ -165,7 +165,7 @@ public class Jarvis {
             lastMove.gamePiece = Util.gamePiece_g;
             lastMove.column = column;            
             val = max(node, depth, lastMove, alpha.clone(), beta.clone());
-            //val.score += Util.possibleWin(node.gameBoard,column) / 10;
+            val.score += Util.numPossibleWins(node,column)[0] / 10;
             node.removePiece(column);           
             if(val.score < beta.score){
                 beta.column = column;
@@ -212,7 +212,6 @@ public class Jarvis {
         
         Move move = null;// = min(gameTree,gameDepth,null);
         Move bestMove = new Move();        
-        
         //bestMove = max(gameTree, gameDepth, null, new Move(0, Integer.MIN_VALUE, Util.gamePiece_b), new Move(0, Integer.MAX_VALUE, Util.gamePiece_r));
         
         for(int column = 0; column < gameTree.boardWidth; column++){
@@ -254,8 +253,7 @@ public class Jarvis {
                 bestMove.column = column;
                 bestMove.score = move.score;
                 highscore = score;
-                //System.out.println("Winning move - Piece: " + bestMove.gamePiece + "  Column: " + bestMove.column + "  Score: " + bestMove.score);    
-                
+                //System.out.println("Winning move - Piece: " + bestMove.gamePiece + "  Column: " + bestMove.column + "  Score: " + bestMove.score);                
             }
         }
         

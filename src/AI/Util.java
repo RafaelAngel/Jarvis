@@ -294,37 +294,37 @@ public final class Util {
         int space= 0;
         int i = 0;
         
-        Byte[] possibleWins = new Byte[13]; 
+        int[] possibleWins = new int[13]; 
         
         int x = col;
         int y = tree.tops[x];
-        if(y>tree.boardHeight){
+        if(y >= tree.boardHeight){
             return numWins;
         }
         
      // Horizontal wins
-        possibleWins[0] =   (byte) (gameBoard[x + 3][y + 3] << 6 | gameBoard[x + 2][y + 3] << 4 | gameBoard[x + 1][y + 3] << 2 | gameBoard[x][y + 3]) ;
-        possibleWins[1] = (byte) (gameBoard[x + 4][y + 3] << 6 | gameBoard[x + 3][y + 3] << 4 | gameBoard[x + 2][y + 3]<< 2 | gameBoard[x + 1][y + 3]) ;
-        possibleWins[2] = (byte) (gameBoard[x + 5][y + 3] << 6 | gameBoard[x + 4][y + 3] << 4 | gameBoard[x + 3][y + 3] << 2 | gameBoard[x + 2][y + 3]) ;
-        possibleWins[3] = (byte) (gameBoard[x + 6][y + 3] << 6 | gameBoard[x + 5][y + 3] << 4 | gameBoard[x + 4][y + 3] << 2 | gameBoard[x + 3][y + 3]) ;
+        possibleWins[0] =  (gameBoard[x + 3][y + 3] << 6 | gameBoard[x + 2][y + 3] << 4 | gameBoard[x + 1][y + 3] << 2 | gameBoard[x][y + 3]) ;
+        possibleWins[1] = (gameBoard[x + 4][y + 3] << 6 | gameBoard[x + 3][y + 3] << 4 | gameBoard[x + 2][y + 3]<< 2 | gameBoard[x + 1][y + 3]) ;
+        possibleWins[2] = (gameBoard[x + 5][y + 3] << 6 | gameBoard[x + 4][y + 3] << 4 | gameBoard[x + 3][y + 3] << 2 | gameBoard[x + 2][y + 3]) ;
+        possibleWins[3] = (gameBoard[x + 6][y + 3] << 6 | gameBoard[x + 5][y + 3] << 4 | gameBoard[x + 4][y + 3] << 2 | gameBoard[x + 3][y + 3]) ;
         
         // Diagonal wins
-        possibleWins[4] =  (byte) (gameBoard[x + 6][y + 6] << 6 | gameBoard[x + 5][y + 5] << 4 | gameBoard[x + 4][y + 4] << 2 | gameBoard[x + 3][y + 3]);
-        possibleWins[5] =  (byte) (gameBoard[x + 5][y + 5] << 6 | gameBoard[x + 4][y + 4] << 4 | gameBoard[x + 3][y + 3] << 2 | gameBoard[x + 2][y + 2]);
-        possibleWins[6] =  (byte) (gameBoard[x + 4][y + 4] << 6 | gameBoard[x + 3][y + 3] << 4 | gameBoard[x + 2][y + 2] << 2 | gameBoard[x + 1][y + 1]);
-        possibleWins[7] =  (byte) (gameBoard[x + 3][y + 3] << 6 | gameBoard[x + 2][y + 2] << 4 | gameBoard[x + 1][y + 1] << 2 | gameBoard[x][y]);
-        possibleWins[8] =  (byte) (gameBoard[x][y + 6] << 6 | gameBoard[x + 1][y + 5] << 4 | gameBoard[x + 2][y + 4] << 2 | gameBoard[x + 3][y + 3]);
-        possibleWins[9] =  (byte) (gameBoard[x + 1][y + 5] << 6 | gameBoard[x + 2][y + 4] << 4 | gameBoard[x + 3][y + 3] << 2 | gameBoard[x + 4][y + 2]);
-        possibleWins[10] = (byte) (gameBoard[x + 2][y + 4] << 6 | gameBoard[x + 3][y + 3] << 4 | gameBoard[x + 4][y + 2] << 2 | gameBoard[x + 5][y + 1]);
-        possibleWins[11] = (byte) (gameBoard[x + 3][y + 3] << 6 | gameBoard[x + 4][y + 2] << 4 | gameBoard[x + 5][y + 1] << 2 | gameBoard[x + 6][y]);
+        possibleWins[4] = (gameBoard[x + 6][y + 6] << 6 | gameBoard[x + 5][y + 5] << 4 | gameBoard[x + 4][y + 4] << 2 | gameBoard[x + 3][y + 3]);
+        possibleWins[5] = (gameBoard[x + 5][y + 5] << 6 | gameBoard[x + 4][y + 4] << 4 | gameBoard[x + 3][y + 3] << 2 | gameBoard[x + 2][y + 2]);
+        possibleWins[6] = (gameBoard[x + 4][y + 4] << 6 | gameBoard[x + 3][y + 3] << 4 | gameBoard[x + 2][y + 2] << 2 | gameBoard[x + 1][y + 1]);
+        possibleWins[7] = (gameBoard[x + 3][y + 3] << 6 | gameBoard[x + 2][y + 2] << 4 | gameBoard[x + 1][y + 1] << 2 | gameBoard[x][y]);
+        possibleWins[8] = (gameBoard[x][y + 6] << 6 | gameBoard[x + 1][y + 5] << 4 | gameBoard[x + 2][y + 4] << 2 | gameBoard[x + 3][y + 3]);
+        possibleWins[9] = (gameBoard[x + 1][y + 5] << 6 | gameBoard[x + 2][y + 4] << 4 | gameBoard[x + 3][y + 3] << 2 | gameBoard[x + 4][y + 2]);
+        possibleWins[10] = (gameBoard[x + 2][y + 4] << 6 | gameBoard[x + 3][y + 3] << 4 | gameBoard[x + 4][y + 2] << 2 | gameBoard[x + 5][y + 1]);
+        possibleWins[11] = (gameBoard[x + 3][y + 3] << 6 | gameBoard[x + 4][y + 2] << 4 | gameBoard[x + 5][y + 1] << 2 | gameBoard[x + 6][y]);
         
         // Vertical wins
         possibleWins[12] =  (byte) (gameBoard[x + 3][y + 3]<< 6 | gameBoard[x + 3][y + 2]<< 4 | gameBoard[x + 3][y + 1]<< 2 | gameBoard[x + 3][y]);
         
-        for(Byte possibleWin: possibleWins){
+        for(int possibleWin: possibleWins){
            
             
-            byte score = Util.possibleWinMap[(int)possibleWin];
+            byte score = Util.possibleWinMap[possibleWin];
             if(score != 0){
                 if(score>0){
                     numWins[0]++;
