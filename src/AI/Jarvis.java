@@ -84,6 +84,7 @@ public class Jarvis {
             lastMove.gamePiece = Util.gamePiece_b;
             lastMove.column = column;            
             val = min(node, depth, lastMove, alpha.clone(), beta.clone());
+            //val.score += Util.possibleWin(node.gameBoard,column) / 10;
             node.removePiece(column);       
             if(val.score > alpha.score){
                 alpha.column = column;
@@ -99,6 +100,7 @@ public class Jarvis {
             lastMove.gamePiece = Util.gamePiece_g;
             lastMove.column = column;            
             val = min(node, depth, lastMove, alpha.clone(), beta.clone());
+            //val.score += Util.possibleWin(node.gameBoard,column) / 10;
             node.removePiece(column);        
             if(val.score > alpha.score){
                 alpha.column = column;
@@ -110,6 +112,8 @@ public class Jarvis {
                 return alpha;
             }
         }
+        
+        
         
         if(alpha.score == Integer.MIN_VALUE){
             alpha.score = 0;
@@ -144,6 +148,7 @@ public class Jarvis {
             lastMove.gamePiece = Util.gamePiece_r;
             lastMove.column = column;            
             val = max(node, depth, lastMove, alpha.clone(), beta.clone());
+            //val.score += Util.possibleWin(node.gameBoard,column) / 10;
             node.removePiece(column);            
             if(val.score < beta.score){
                 beta.column = column;
@@ -159,6 +164,7 @@ public class Jarvis {
             lastMove.gamePiece = Util.gamePiece_g;
             lastMove.column = column;            
             val = max(node, depth, lastMove, alpha.clone(), beta.clone());
+            //val.score += Util.possibleWin(node.gameBoard,column) / 10;
             node.removePiece(column);           
             if(val.score < beta.score){
                 beta.column = column;
