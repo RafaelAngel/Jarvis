@@ -273,41 +273,7 @@ public final class Util {
         String result = new String(bout.toByteArray());
         return result;
     }
-    
-    public static int findYFromCol(byte[][] gameBoard, int x)
-    {
-        int y = 0;
-        
-        for(y = 0; y < gameBoard[x+3].length; y++){
-            int length = gameBoard[x+3].length;
-            if(gameBoard[x+3][y+3] == Util.gamePiece_s || gameBoard[x+3][y+3] == Util.gamePiece_e){
-                y--;
-                break;
-            }
-        }
-        
-        if(y >= Util.gameHeight){
-            //TODO: this shouldn't ever be reached, but it is.
-            y = 0;
-        }
-        
-        return y;
-    }
-    
-    /**
-     * Util Function that returns the number of possible wins in any paticular board
-     * 
-     * @param gameBoard - the board
-     * @param colour - which player we are calculating wins for, red or blue
-     * @return
-     */
-    private static int numPossibleWins(byte[][] possibleWingameBoard)
-    {
-        int numWins = 0;
-        
-        return numWins;
-    
-    }
+
     
    /**
     * Util Function that returns the number of possible wins in any paticular board
@@ -321,8 +287,9 @@ public final class Util {
     * @return a Length 2 int array with the first element the number of blue wins
     *   and the secont the number of red wins
     */
-    public static int[] numPossibleWins(byte[][] gameBoard, int col)
+    public static int[] numPossibleWins(GameTree tree, int col)
     {
+        byte[][] gameBoard = tree.gameBoard;
         int numWins[] = {0,0};
         int space= 0;
         int i = 0;
@@ -330,7 +297,10 @@ public final class Util {
         Byte[] possibleWins = new Byte[13]; 
         
         int x = col;
-        int y = findYFromCol(gameBoard, x);
+        int y = tree.tops[x];
+        if(y>tree.boardHeight){
+            return numWins;
+        }
         
      // Horizontal wins
         possibleWins[0] =   (byte) (gameBoard[x + 3][y + 3] << 6 | gameBoard[x + 2][y + 3] << 4 | gameBoard[x + 1][y + 3] << 2 | gameBoard[x][y + 3]) ;
