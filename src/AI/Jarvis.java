@@ -1,4 +1,4 @@
-//package AI;
+package AI;
 
 import java.util.Arrays;
 import java.util.StringTokenizer;
@@ -112,7 +112,7 @@ public class Jarvis {
         }
         
         if(alpha.score == Integer.MIN_VALUE){
-            alpha.score = Integer.MAX_VALUE;
+            alpha.score = 0;
         }
         return alpha;
     }
@@ -172,7 +172,7 @@ public class Jarvis {
         }
 
         if(beta.score == Integer.MAX_VALUE){
-            beta.score = Integer.MIN_VALUE;
+            beta.score = 0;
         }
         return beta;
     }
@@ -220,10 +220,10 @@ public class Jarvis {
             move = min(gameTree, gameDepth, lastMove, new Move(0, Integer.MIN_VALUE, Util.gamePiece_b), new Move(0, Integer.MAX_VALUE, Util.gamePiece_r));       
             gameTree.removePiece(column);
             //
-            //System.out.print("Piece: " + Util.gamePiece_b + "  Column: " + (column+1) + "  Unadjusted: " + move.score + "  Adjusted: ");                        
+            System.out.print("Piece: " + Util.gamePiece_b + "  Column: " + (column+1) + "  Unadjusted: " + move.score + "  Adjusted: ");                        
             //Give higher weighting to central columns. Will add maximum of 0.5 score
             double score = move.score + 1/(Math.exp(Math.pow(column - Util.gameWidth/2,2)))/2;            
-            //System.out.println(score);            
+            System.out.println(score);            
             if(score > highscore){
                 bestMove.gamePiece = Util.gamePiece_b;
                 bestMove.column = column;
@@ -238,10 +238,10 @@ public class Jarvis {
             move = min(gameTree, gameDepth, lastMove, new Move(0, Integer.MIN_VALUE, Util.gamePiece_b), new Move(0, Integer.MAX_VALUE, Util.gamePiece_r));     
             gameTree.removePiece(column);       
             //
-            //System.out.print("Piece: " + Util.gamePiece_g + "  Column: " + (column+1) + "  Unadjusted: " + move.score + "  Adjusted: ");                        
+            System.out.print("Piece: " + Util.gamePiece_g + "  Column: " + (column+1) + "  Unadjusted: " + move.score + "  Adjusted: ");                        
             //Give higher weighting to central columns. Will add maximum of 0.5 score
             score = move.score + 1/(Math.exp(Math.pow(column - Util.gameWidth/2,2)))/2;            
-            //System.out.println(score);            
+            System.out.println(score);            
             if(score > highscore){
                 bestMove.gamePiece = Util.gamePiece_g;
                 bestMove.column = column;
