@@ -1,4 +1,4 @@
-//package AI;
+package AI;
 
 /*
 * non-blocking console input courtesy of http://www.darkcoding.net/software/non-blocking-console-io-is-not-possible/
@@ -27,6 +27,7 @@ public final class Util {
     public static final byte gamePiece_b = 2;
     public static final byte gamePiece_g = 3;
     public static final byte gamePiece_s = 0;
+    public static final byte gamePiece_e = 4;
     
     public static IsWin isWin;
     
@@ -210,6 +211,120 @@ public final class Util {
 
         String result = new String(bout.toByteArray());
         return result;
+    }
+    
+    public static int findYFromCol(byte[][] gameBoard, int x)
+    {
+        int y = 0;
+        
+        for(y = 0; y < gameBoard[x+3].length; y++){
+            int length = gameBoard[x+3].length;
+            if(gameBoard[x+3][y+3] == Util.gamePiece_s || gameBoard[x+3][y+3] == Util.gamePiece_e){
+                y--;
+                break;
+            }
+        }
+        
+        if(y >= Util.gameHeight){
+            //TODO: this shouldn't ever be reached, but it is.
+            y = 0;
+        }
+        
+        return y;
+    }
+    
+    /**
+     * Util Function that returns the number of possible wins in any paticular board
+     * 
+     * @param gameBoard - the board
+     * @param colour - which player we are calculating wins for, red or blue
+     * @return
+     */
+    private static int numPossibleWins(byte[][] possibleWingameBoard)
+    {
+        int numWins = 0;
+        
+        return numWins;
+    
+    }
+    
+   /**
+    * Util Function that returns the number of possible wins in any paticular board
+    * 
+    * This one only calculates the wins of a paticular piece, the top piece of a
+    *   column  
+    *
+    * @param gameBoard - the board
+    * @param col - the column
+    * 
+    * @return a Length 2 int array with the first element the number of blue wins
+    *   and the secont the number of red wins
+    */
+    public static int[] numPossibleWins(byte[][] gameBoard, int col)
+    {
+        int numWins[] = {0,0};
+        int space= 0;
+        int i = 0;
+        
+        Byte[] possibleWins = new Byte[13]; 
+        
+        int x = col;
+        int y = findYFromCol(gameBoard, x);
+        
+     // Horizontal wins
+        possibleWins[0] =   (byte) (gameBoard[x + 3][y + 3] << 6 | gameBoard[x + 2][y + 3] << 4 | gameBoard[x + 1][y + 3] << 2 | gameBoard[x][y + 3]) ;
+        possibleWins[1] = (byte) (gameBoard[x + 4][y + 3] << 6 | gameBoard[x + 3][y + 3] << 4 | gameBoard[x + 2][y + 3]<< 2 | gameBoard[x + 1][y + 3]) ;
+        possibleWins[2] = (byte) (gameBoard[x + 5][y + 3] << 6 | gameBoard[x + 4][y + 3] << 4 | gameBoard[x + 3][y + 3] << 2 | gameBoard[x + 2][y + 3]) ;
+        possibleWins[3] = (byte) (gameBoard[x + 6][y + 3] << 6 | gameBoard[x + 5][y + 3] << 4 | gameBoard[x + 4][y + 3] << 2 | gameBoard[x + 3][y + 3]) ;
+        
+        // Diagonal wins
+        possibleWins[4] =  (byte) (gameBoard[x + 6][y + 6] << 6 | gameBoard[x + 5][y + 5] << 4 | gameBoard[x + 4][y + 4] << 2 | gameBoard[x + 3][y + 3]);
+        possibleWins[5] =  (byte) (gameBoard[x + 5][y + 5] << 6 | gameBoard[x + 4][y + 4] << 4 | gameBoard[x + 3][y + 3] << 2 | gameBoard[x + 2][y + 2]);
+        possibleWins[6] =  (byte) (gameBoard[x + 4][y + 4] << 6 | gameBoard[x + 3][y + 3] << 4 | gameBoard[x + 2][y + 2] << 2 | gameBoard[x + 1][y + 1]);
+        possibleWins[7] =  (byte) (gameBoard[x + 3][y + 3] << 6 | gameBoard[x + 2][y + 2] << 4 | gameBoard[x + 1][y + 1] << 2 | gameBoard[x][y]);
+        possibleWins[8] =  (byte) (gameBoard[x][y + 6] << 6 | gameBoard[x + 1][y + 5] << 4 | gameBoard[x + 2][y + 4] << 2 | gameBoard[x + 3][y + 3]);
+        possibleWins[9] =  (byte) (gameBoard[x + 1][y + 5] << 6 | gameBoard[x + 2][y + 4] << 4 | gameBoard[x + 3][y + 3] << 2 | gameBoard[x + 4][y + 2]);
+        possibleWins[10] = (byte) (gameBoard[x + 2][y + 4] << 6 | gameBoard[x + 3][y + 3] << 4 | gameBoard[x + 4][y + 2] << 2 | gameBoard[x + 5][y + 1]);
+        possibleWins[11] = (byte) (gameBoard[x + 3][y + 3] << 6 | gameBoard[x + 4][y + 2] << 4 | gameBoard[x + 5][y + 1] << 2 | gameBoard[x + 6][y]);
+        
+        // Vertical wins
+        possibleWins[12] =  (byte) (gameBoard[x + 3][y + 3]<< 6 | gameBoard[x + 3][y + 2]<< 4 | gameBoard[x + 3][y + 1]<< 2 | gameBoard[x + 3][y]);
+        
+        for(Byte possibleWin: possibleWins){
+            //There is only one space
+            /*if(possibleWin[0]==gamePiece_s ^ possibleWin[1]==gamePiece_s ^possibleWin[2]==gamePiece_s ^possibleWin[3]==gamePiece_s){
+                
+            }
+            */
+            
+            space =0;
+            if(((possibleWin&192)>>6==0) ^((possibleWin&48)>>4==0)^((possibleWin&12)>>2==0)^((possibleWin&3)==0)){
+                space = 1;
+            }
+            
+            
+            if (space==1){
+                
+                for(i = 0; i<4; i++){
+                    Integer score = Util.winMap.get(Arrays.toString(possibleWin));
+                    if(score != null){
+                        if(score>0){
+                            numWins[0]++;
+                        }
+                        else{
+                            numWins[1]++;
+                        }
+                        
+                    }
+                    
+                }
+            }
+            
+                
+        }
+        
+        
+        return numWins;
     }
 
 }

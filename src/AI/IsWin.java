@@ -1,4 +1,4 @@
-//package AI;
+package AI;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -39,6 +39,7 @@ public class IsWin {
         // Horizontal wins
         //possibleWins[0] = new Byte[] { gameBoard[x + 3][y + 3], gameBoard[x + 2][y + 3], gameBoard[x + 1][y + 3], gameBoard[x][y + 3] };
         score = Util.winMap[gameBoard[x + 3][y + 3] << 6 | gameBoard[x + 2][y + 3] << 4 | gameBoard[x + 1][y + 3] << 2 | gameBoard[x][y + 3]];
+        
         totalScore += score;
         highScore = (highScore < score) ? score : highScore;
         lowScore = (lowScore > score) ? score : lowScore;
