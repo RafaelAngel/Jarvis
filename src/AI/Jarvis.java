@@ -26,7 +26,7 @@ public class Jarvis {
         Util util = new Util();      
         String input = Util.getStandardInput();        
         GameTree gameTree = createGameTree(input);
-
+        
         isWin = new IsWin();           
 
         long startTime = System.currentTimeMillis();
@@ -284,7 +284,7 @@ public class Jarvis {
         
         byte[][] gameBoard = new byte[num_col + 6][num_row + 6];
         for(byte[] column: gameBoard){
-            Arrays.fill(column, Util.gamePiece_s);
+            Arrays.fill(column, Util.gamePiece_e);
         }
         
         GameTree gameTree = new GameTree(num_col, num_row);
@@ -292,9 +292,9 @@ public class Jarvis {
         for (int x = 0; x < num_col; x++) {
             for (int y = 0; y < num_row; y++) {
                 byte piece = Util.pieceMap.get((String) tokenizer.nextElement());
-                if(piece != Util.gamePiece_s){
-                    gameTree.insertPiece(x,piece);
-                }
+                
+                gameTree.insertPiece(x,piece);
+                
             }
         }
 

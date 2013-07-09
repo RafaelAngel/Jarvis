@@ -38,8 +38,11 @@ public class GameTree {
     }
     
     public void insertPiece(int column, byte piece){
-        this.gameBoard[column + 3][this.tops[column]++ + 3] = piece;
-        pieceCount++;
+        this.gameBoard[column + 3][this.tops[column] + 3] = piece;
+        if(piece!=Util.gamePiece_s){
+            this.tops[column]++;
+            pieceCount++;
+        }
     }
     
     public void removePiece(int column){
