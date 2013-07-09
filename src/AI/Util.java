@@ -352,36 +352,19 @@ public final class Util {
         possibleWins[12] =  (byte) (gameBoard[x + 3][y + 3]<< 6 | gameBoard[x + 3][y + 2]<< 4 | gameBoard[x + 3][y + 1]<< 2 | gameBoard[x + 3][y]);
         
         for(Byte possibleWin: possibleWins){
-            //There is only one space
-            /*if(possibleWin[0]==gamePiece_s ^ possibleWin[1]==gamePiece_s ^possibleWin[2]==gamePiece_s ^possibleWin[3]==gamePiece_s){
-                
-            }
-            */
+           
             
-            space =0;
-            if(((possibleWin&192)>>6==0) ^((possibleWin&48)>>4==0)^((possibleWin&12)>>2==0)^((possibleWin&3)==0)){
-                space = 1;
-            }
-            
-            
-            if (space==1){
-                
-                for(i = 0; i<4; i++){
-                    Integer score = Util.possibleWinMap[possibleWin];
-                    if(score != null){
-                        if(score>0){
-                            numWins[0]++;
-                        }
-                        else{
-                            numWins[1]++;
-                        }
-                        
-                    }
-                    
+            byte score = Util.possibleWinMap[(int)possibleWin];
+            if(score != 0){
+                if(score>0){
+                    numWins[0]++;
                 }
-            }
-            
+                else {
+                    numWins[1]++;
+                }
                 
+            }
+       
         }
         
         
