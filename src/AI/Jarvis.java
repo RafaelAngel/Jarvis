@@ -1,4 +1,4 @@
-package AI;
+//package AI;
 
 import java.util.Arrays;
 import java.util.StringTokenizer;
@@ -14,6 +14,8 @@ public class Jarvis {
     private static int player1_time ;
     private static int last_move_time;
     
+    public static boolean logging = false;
+    
     /**
      * Number of moves Jarvis looks into the "future"
      */
@@ -26,8 +28,8 @@ public class Jarvis {
         Util util = new Util();      
         String input = Util.getStandardInput();        
         GameTree gameTree = createGameTree(input);
-        int numWins[] = Util.numPossibleWins(gameTree, 6);
-        System.err.println("Blue wins: "+ numWins[0]+" Red wins: "+numWins[1]);
+        //int numWins[] = Util.numPossibleWins(gameTree, 6);
+        //System.err.println("Blue wins: "+ numWins[0]+" Red wins: "+numWins[1]);
         printBoard(gameTree.gameBoard);
         isWin = new IsWin();           
 
@@ -39,7 +41,7 @@ public class Jarvis {
         for(;;){
             winningMove = findOptimalMove(gameTree);
             long taken = System.currentTimeMillis() - startTime;
-            if(taken > 1200 || gameTree.pieceCount < 4 || gameDepth > (num_col*num_row - gameTree.pieceCount)){ //TODO: use actual game times
+            if(taken > 1200 || gameTree.pieceCount < 4 || gameDepth > (num_col*num_row - gameTree.pieceCount)){
                 break;
             }
             gameDepth++;
@@ -48,17 +50,29 @@ public class Jarvis {
         
         System.out.println("(" + (winningMove.column + 1) + "," + Util.getKeyByValue(Util.pieceMap, winningMove.gamePiece) + ")");    
     }
-    
+
     private static void printBoard(byte[][] gameBoard){
         // prints the game board (will be rotated 90 degress)gameTree
          for (int x = 0; x < num_col; x++) {
              for (int y = 0; y < num_row; y++) {
-                 System.out.print(Util.getKeyByValue(Util.pieceMap, gameBoard[x + 3][y + 3]));
+                 print(Util.getKeyByValue(Util.pieceMap, gameBoard[x + 3][y + 3]));
              }
-             System.out.println();
+             println("");
          }
     }
     
+    private static void print(Object string) {
+        if(logging){
+            System.out.print(string.toString());
+        }
+    }
+    
+    private static void println(Object string) {
+        if(logging){
+            System.out.println(string.toString());
+        }
+    }
+
     private static Move max(GameTree node, int depth, Move lastMove, Move alpha, Move beta){    
         if(lastMove == null){
             lastMove = new Move();
@@ -86,7 +100,7 @@ public class Jarvis {
             lastMove.gamePiece = Util.gamePiece_b;
             lastMove.column = column;            
             val = min(node, depth, lastMove, alpha.clone(), beta.clone());
-            val.score += Util.numPossibleWins(node,column)[0] / 10;
+            val.score += (double) Util.numPossibleWins(node, column)[0] / 5;  
             node.removePiece(column);       
             if(val.score > alpha.score){
                 alpha.column = column;
@@ -102,7 +116,7 @@ public class Jarvis {
             lastMove.gamePiece = Util.gamePiece_g;
             lastMove.column = column;            
             val = min(node, depth, lastMove, alpha.clone(), beta.clone());
-            val.score += Util.numPossibleWins(node,column)[0] / 10;
+            val.score += (double) Util.numPossibleWins(node, column)[0] / 5;  
             node.removePiece(column);        
             if(val.score > alpha.score){
                 alpha.column = column;
@@ -150,7 +164,7 @@ public class Jarvis {
             lastMove.gamePiece = Util.gamePiece_r;
             lastMove.column = column;            
             val = max(node, depth, lastMove, alpha.clone(), beta.clone());
-            val.score += Util.numPossibleWins(node,column)[0] / 10;
+            val.score += (double) Util.numPossibleWins(node, column)[0] / 5;  
             node.removePiece(column);            
             if(val.score < beta.score){
                 beta.column = column;
@@ -166,7 +180,7 @@ public class Jarvis {
             lastMove.gamePiece = Util.gamePiece_g;
             lastMove.column = column;            
             val = max(node, depth, lastMove, alpha.clone(), beta.clone());
-            val.score += Util.numPossibleWins(node,column)[0] / 10;
+            val.score += (double) Util.numPossibleWins(node, column)[0] / 5;  
             node.removePiece(column);           
             if(val.score < beta.score){
                 beta.column = column;
@@ -224,45 +238,46 @@ public class Jarvis {
             lastMove.column = column;
             lastMove.gamePiece = Util.gamePiece_b;
             gameTree.insertPiece(column, Util.gamePiece_b);
-            move = min(gameTree, gameDepth, lastMove, new Move(0, Integer.MIN_VALUE, Util.gamePiece_b), new Move(0, Integer.MAX_VALUE, Util.gamePiece_r));       
-            gameTree.removePiece(column);
-            //
-            System.out.print("Piece: " + Util.gamePiece_b + "  Column: " + (column+1) + "  Unadjusted: " + move.score + "  Adjusted: ");                        
+            move = min(gameTree, gameDepth, lastMove, new Move(0, Integer.MIN_VALUE, Util.gamePiece_b), new Move(0, Integer.MAX_VALUE, Util.gamePiece_r)); 
+
+            print("Piece: " + Util.gamePiece_b + "  Column: " + (column+1) + "  Unadjusted: " + move.score + "  Adjusted: ");  
             //Give higher weighting to central columns. Will add maximum of 0.5 score
-            double score = move.score + 1/(Math.exp(Math.pow(column - Util.gameWidth/2,2)))/2;            
-            System.out.println(score);            
+            double score = move.score + 1/(Math.exp(Math.pow(column - Util.gameWidth/2,2)))/2;  
+            score += (double) Util.numPossibleWins(gameTree, column)[0] / 5;       
+            gameTree.removePiece(column);            
+            println(score);            
             if(score > highscore){
                 bestMove.gamePiece = Util.gamePiece_b;
                 bestMove.column = column;
                 bestMove.score = move.score;
-                highscore = score;
-                //System.out.println("Winning move - Piece: " + bestMove.gamePiece + "  Column: " + bestMove.column + "  Score: " + bestMove.score);     
+                highscore = score;  
             }
 
             lastMove.column = column;
             lastMove.gamePiece = Util.gamePiece_g;
             gameTree.insertPiece(column, Util.gamePiece_g);
             move = min(gameTree, gameDepth, lastMove, new Move(0, Integer.MIN_VALUE, Util.gamePiece_b), new Move(0, Integer.MAX_VALUE, Util.gamePiece_r));     
-            gameTree.removePiece(column);       
-            //
-            System.out.print("Piece: " + Util.gamePiece_g + "  Column: " + (column+1) + "  Unadjusted: " + move.score + "  Adjusted: ");                        
+
+            print("Piece: " + Util.gamePiece_g + "  Column: " + (column+1) + "  Unadjusted: " + move.score + "  Adjusted: ");
             //Give higher weighting to central columns. Will add maximum of 0.5 score
-            score = move.score + 1/(Math.exp(Math.pow(column - Util.gameWidth/2,2)))/2;            
-            System.out.println(score);            
+            score = move.score + 1/(Math.exp(Math.pow(column - Util.gameWidth/2,2)))/2;       
+            score += (double) Util.numPossibleWins(gameTree, column)[0] / 5;  
+            gameTree.removePiece(column);       
+            println(score);      
+            
             if(score > highscore){
                 bestMove.gamePiece = Util.gamePiece_g;
                 bestMove.column = column;
                 bestMove.score = move.score;
-                highscore = score;
-                //System.out.println("Winning move - Piece: " + bestMove.gamePiece + "  Column: " + bestMove.column + "  Score: " + bestMove.score);                
+                highscore = score;             
             }
         }
         
-        //System.out.println("Winning move - Piece: " + bestMove.gamePiece + "  Column: " + (bestMove.column+1) + "  Score: " + bestMove.score);    
+        println("Winning move - Piece: " + bestMove.gamePiece + "  Column: " + (bestMove.column+1) + "  Score: " + bestMove.score);    
         
         return bestMove;        
     }    
-    
+
     private static GameTree createGameTree(String input){
         
         StringTokenizer tokenizer = new StringTokenizer(input, ",");
