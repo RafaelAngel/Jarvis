@@ -367,7 +367,7 @@ public final class Util {
             if (space==1){
                 
                 for(i = 0; i<4; i++){
-                    Integer score = Util.winMap.get(Arrays.toString(possibleWin));
+                    Integer score = Util.possibleWinMap[possibleWin];
                     if(score != null){
                         if(score>0){
                             numWins[0]++;
