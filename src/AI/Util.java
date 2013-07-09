@@ -28,7 +28,7 @@ public final class Util {
     public static final byte gamePiece_b = 2;
     public static final byte gamePiece_g = 3;
     public static final byte gamePiece_s = 0;
-    public static final byte gamePiece_e = -1;
+    public static final byte gamePiece_e = 0;
     
     public static IsWin isWin;
     
