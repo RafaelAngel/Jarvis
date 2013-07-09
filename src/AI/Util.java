@@ -55,65 +55,65 @@ public final class Util {
         winMap[gamePiece_g << 6 | gamePiece_r << 4 | gamePiece_g << 2 | gamePiece_r] = -3;
 
         
-        winMap[gamePiece_s << 6 | gamePiece_b << 4 | gamePiece_g << 2 | gamePiece_g] = 5;
-        winMap[gamePiece_b << 6 | gamePiece_s << 4 | gamePiece_g << 2 | gamePiece_g] = 5;
-        winMap[gamePiece_b << 6 | gamePiece_b << 4 | gamePiece_s << 2 | gamePiece_g] = 5;
-        winMap[gamePiece_b << 6 | gamePiece_b << 4 | gamePiece_g << 2 | gamePiece_s] = 5;
+        possibleWinMap[gamePiece_s << 6 | gamePiece_b << 4 | gamePiece_g << 2 | gamePiece_g] = 5;
+        possibleWinMap[gamePiece_b << 6 | gamePiece_s << 4 | gamePiece_g << 2 | gamePiece_g] = 5;
+        possibleWinMap[gamePiece_b << 6 | gamePiece_b << 4 | gamePiece_s << 2 | gamePiece_g] = 5;
+        possibleWinMap[gamePiece_b << 6 | gamePiece_b << 4 | gamePiece_g << 2 | gamePiece_s] = 5;
         
-        winMap[gamePiece_s << 6 | gamePiece_g << 4 | gamePiece_b << 2 | gamePiece_b] = 5;
-        winMap[gamePiece_g << 6 | gamePiece_s << 4 | gamePiece_b << 2 | gamePiece_b] = 5;
-        winMap[gamePiece_g << 6 | gamePiece_g << 4 | gamePiece_s << 2 | gamePiece_b] = 5;
-        winMap[gamePiece_g << 6 | gamePiece_g << 4 | gamePiece_b << 2 | gamePiece_s] = 5;
+        possibleWinMap[gamePiece_s << 6 | gamePiece_g << 4 | gamePiece_b << 2 | gamePiece_b] = 5;
+        possibleWinMap[gamePiece_g << 6 | gamePiece_s << 4 | gamePiece_b << 2 | gamePiece_b] = 5;
+        possibleWinMap[gamePiece_g << 6 | gamePiece_g << 4 | gamePiece_s << 2 | gamePiece_b] = 5;
+        possibleWinMap[gamePiece_g << 6 | gamePiece_g << 4 | gamePiece_b << 2 | gamePiece_s] = 5;
 
-        winMap[gamePiece_s << 6 | gamePiece_g << 4 | gamePiece_g << 2 | gamePiece_b] = 4;
-        winMap[gamePiece_b << 6 | gamePiece_s << 4 | gamePiece_g << 2 | gamePiece_b] = 4;
-        winMap[gamePiece_b << 6 | gamePiece_g << 4 | gamePiece_s << 2 | gamePiece_b] = 4;
-        winMap[gamePiece_b << 6 | gamePiece_g << 4 | gamePiece_g << 2 | gamePiece_s] = 4;
+        possibleWinMap[gamePiece_s << 6 | gamePiece_g << 4 | gamePiece_g << 2 | gamePiece_b] = 4;
+        possibleWinMap[gamePiece_b << 6 | gamePiece_s << 4 | gamePiece_g << 2 | gamePiece_b] = 4;
+        possibleWinMap[gamePiece_b << 6 | gamePiece_g << 4 | gamePiece_s << 2 | gamePiece_b] = 4;
+        possibleWinMap[gamePiece_b << 6 | gamePiece_g << 4 | gamePiece_g << 2 | gamePiece_s] = 4;
 
-        winMap[gamePiece_s << 6 | gamePiece_b << 4 | gamePiece_b << 2 | gamePiece_g] = 4;
-        winMap[gamePiece_g << 6 | gamePiece_s << 4 | gamePiece_b << 2 | gamePiece_g] = 4;
-        winMap[gamePiece_g << 6 | gamePiece_b << 4 | gamePiece_s << 2 | gamePiece_g] = 4;
-        winMap[gamePiece_g << 6 | gamePiece_b << 4 | gamePiece_b << 2 | gamePiece_s] = 4;
+        possibleWinMap[gamePiece_s << 6 | gamePiece_b << 4 | gamePiece_b << 2 | gamePiece_g] = 4;
+        possibleWinMap[gamePiece_g << 6 | gamePiece_s << 4 | gamePiece_b << 2 | gamePiece_g] = 4;
+        possibleWinMap[gamePiece_g << 6 | gamePiece_b << 4 | gamePiece_s << 2 | gamePiece_g] = 4;
+        possibleWinMap[gamePiece_g << 6 | gamePiece_b << 4 | gamePiece_b << 2 | gamePiece_s] = 4;
 
-        winMap[gamePiece_s << 6 | gamePiece_g << 4 | gamePiece_b << 2 | gamePiece_g] = 3;
-        winMap[gamePiece_b << 6 | gamePiece_s << 4 | gamePiece_b << 2 | gamePiece_g] = 3;
-        winMap[gamePiece_b << 6 | gamePiece_g << 4 | gamePiece_s << 2 | gamePiece_g] = 3;
-        winMap[gamePiece_b << 6 | gamePiece_g << 4 | gamePiece_b << 2 | gamePiece_s] = 3;
+        possibleWinMap[gamePiece_s << 6 | gamePiece_g << 4 | gamePiece_b << 2 | gamePiece_g] = 3;
+        possibleWinMap[gamePiece_b << 6 | gamePiece_s << 4 | gamePiece_b << 2 | gamePiece_g] = 3;
+        possibleWinMap[gamePiece_b << 6 | gamePiece_g << 4 | gamePiece_s << 2 | gamePiece_g] = 3;
+        possibleWinMap[gamePiece_b << 6 | gamePiece_g << 4 | gamePiece_b << 2 | gamePiece_s] = 3;
 
-        winMap[gamePiece_s << 6 | gamePiece_b << 4 | gamePiece_g << 2 | gamePiece_b] = 3;
-        winMap[gamePiece_g << 6 | gamePiece_s << 4 | gamePiece_g << 2 | gamePiece_b] = 3;
-        winMap[gamePiece_g << 6 | gamePiece_b << 4 | gamePiece_s << 2 | gamePiece_b] = 3;
-        winMap[gamePiece_g << 6 | gamePiece_b << 4 | gamePiece_g << 2 | gamePiece_s] = 3;
+        possibleWinMap[gamePiece_s << 6 | gamePiece_b << 4 | gamePiece_g << 2 | gamePiece_b] = 3;
+        possibleWinMap[gamePiece_g << 6 | gamePiece_s << 4 | gamePiece_g << 2 | gamePiece_b] = 3;
+        possibleWinMap[gamePiece_g << 6 | gamePiece_b << 4 | gamePiece_s << 2 | gamePiece_b] = 3;
+        possibleWinMap[gamePiece_g << 6 | gamePiece_b << 4 | gamePiece_g << 2 | gamePiece_s] = 3;
         
-        winMap[gamePiece_s << 6 | gamePiece_r << 4 | gamePiece_g << 2 | gamePiece_g] = -5;
-        winMap[gamePiece_r << 6 | gamePiece_s << 4 | gamePiece_g << 2 | gamePiece_g] = -5;
-        winMap[gamePiece_r << 6 | gamePiece_r << 4 | gamePiece_s << 2 | gamePiece_g] = -5;
-        winMap[gamePiece_r << 6 | gamePiece_r << 4 | gamePiece_g << 2 | gamePiece_s] = -5;
+        possibleWinMap[gamePiece_s << 6 | gamePiece_r << 4 | gamePiece_g << 2 | gamePiece_g] = -5;
+        possibleWinMap[gamePiece_r << 6 | gamePiece_s << 4 | gamePiece_g << 2 | gamePiece_g] = -5;
+        possibleWinMap[gamePiece_r << 6 | gamePiece_r << 4 | gamePiece_s << 2 | gamePiece_g] = -5;
+        possibleWinMap[gamePiece_r << 6 | gamePiece_r << 4 | gamePiece_g << 2 | gamePiece_s] = -5;
         
-        winMap[gamePiece_s << 6 | gamePiece_g << 4 | gamePiece_r << 2 | gamePiece_r] = -5;
-        winMap[gamePiece_g << 6 | gamePiece_s << 4 | gamePiece_r << 2 | gamePiece_r] = -5;
-        winMap[gamePiece_g << 6 | gamePiece_g << 4 | gamePiece_s << 2 | gamePiece_r] = -5;
-        winMap[gamePiece_g << 6 | gamePiece_g << 4 | gamePiece_r << 2 | gamePiece_s] = -5;
+        possibleWinMap[gamePiece_s << 6 | gamePiece_g << 4 | gamePiece_r << 2 | gamePiece_r] = -5;
+        possibleWinMap[gamePiece_g << 6 | gamePiece_s << 4 | gamePiece_r << 2 | gamePiece_r] = -5;
+        possibleWinMap[gamePiece_g << 6 | gamePiece_g << 4 | gamePiece_s << 2 | gamePiece_r] = -5;
+        possibleWinMap[gamePiece_g << 6 | gamePiece_g << 4 | gamePiece_r << 2 | gamePiece_s] = -5;
         
-        winMap[gamePiece_s << 6 | gamePiece_g << 4 | gamePiece_g << 2 | gamePiece_r] = -4;
-        winMap[gamePiece_r << 6 | gamePiece_s << 4 | gamePiece_g << 2 | gamePiece_r] = -4;
-        winMap[gamePiece_r << 6 | gamePiece_g << 4 | gamePiece_s << 2 | gamePiece_r] = -4;
-        winMap[gamePiece_r << 6 | gamePiece_g << 4 | gamePiece_g << 2 | gamePiece_s] = -4;
+        possibleWinMap[gamePiece_s << 6 | gamePiece_g << 4 | gamePiece_g << 2 | gamePiece_r] = -4;
+        possibleWinMap[gamePiece_r << 6 | gamePiece_s << 4 | gamePiece_g << 2 | gamePiece_r] = -4;
+        possibleWinMap[gamePiece_r << 6 | gamePiece_g << 4 | gamePiece_s << 2 | gamePiece_r] = -4;
+        possibleWinMap[gamePiece_r << 6 | gamePiece_g << 4 | gamePiece_g << 2 | gamePiece_s] = -4;
         
-        winMap[gamePiece_s << 6 | gamePiece_r << 4 | gamePiece_r << 2 | gamePiece_g] = -4;
-        winMap[gamePiece_g << 6 | gamePiece_s << 4 | gamePiece_r << 2 | gamePiece_g] = -4;
-        winMap[gamePiece_g << 6 | gamePiece_r << 4 | gamePiece_s << 2 | gamePiece_g] = -4;
-        winMap[gamePiece_g << 6 | gamePiece_r << 4 | gamePiece_r << 2 | gamePiece_s] = -4;
+        possibleWinMap[gamePiece_s << 6 | gamePiece_r << 4 | gamePiece_r << 2 | gamePiece_g] = -4;
+        possibleWinMap[gamePiece_g << 6 | gamePiece_s << 4 | gamePiece_r << 2 | gamePiece_g] = -4;
+        possibleWinMap[gamePiece_g << 6 | gamePiece_r << 4 | gamePiece_s << 2 | gamePiece_g] = -4;
+        possibleWinMap[gamePiece_g << 6 | gamePiece_r << 4 | gamePiece_r << 2 | gamePiece_s] = -4;
         
-        winMap[gamePiece_s << 6 | gamePiece_g << 4 | gamePiece_r << 2 | gamePiece_g] = -3;
-        winMap[gamePiece_r << 6 | gamePiece_s << 4 | gamePiece_r << 2 | gamePiece_g] = -3;
-        winMap[gamePiece_r << 6 | gamePiece_g << 4 | gamePiece_s << 2 | gamePiece_g] = -3;
-        winMap[gamePiece_r << 6 | gamePiece_g << 4 | gamePiece_r << 2 | gamePiece_s] = -3;
+        possibleWinMap[gamePiece_s << 6 | gamePiece_g << 4 | gamePiece_r << 2 | gamePiece_g] = -3;
+        possibleWinMap[gamePiece_r << 6 | gamePiece_s << 4 | gamePiece_r << 2 | gamePiece_g] = -3;
+        possibleWinMap[gamePiece_r << 6 | gamePiece_g << 4 | gamePiece_s << 2 | gamePiece_g] = -3;
+        possibleWinMap[gamePiece_r << 6 | gamePiece_g << 4 | gamePiece_r << 2 | gamePiece_s] = -3;
         
-        winMap[gamePiece_s << 6 | gamePiece_r << 4 | gamePiece_g << 2 | gamePiece_r] = -3;
-        winMap[gamePiece_g << 6 | gamePiece_s << 4 | gamePiece_g << 2 | gamePiece_r] = -3;
-        winMap[gamePiece_g << 6 | gamePiece_r << 4 | gamePiece_s << 2 | gamePiece_r] = -3;
-        winMap[gamePiece_g << 6 | gamePiece_r << 4 | gamePiece_g << 2 | gamePiece_s] = -3;
+        possibleWinMap[gamePiece_s << 6 | gamePiece_r << 4 | gamePiece_g << 2 | gamePiece_r] = -3;
+        possibleWinMap[gamePiece_g << 6 | gamePiece_s << 4 | gamePiece_g << 2 | gamePiece_r] = -3;
+        possibleWinMap[gamePiece_g << 6 | gamePiece_r << 4 | gamePiece_s << 2 | gamePiece_r] = -3;
+        possibleWinMap[gamePiece_g << 6 | gamePiece_r << 4 | gamePiece_g << 2 | gamePiece_s] = -3;
     }
 
     public static byte[][] buildGameBoardFromNode(GameNode gameNode) {
