@@ -100,7 +100,9 @@ public class Jarvis {
             lastMove.gamePiece = Util.gamePiece_b;
             lastMove.column = column;            
             val = min(node, depth, lastMove, alpha.clone(), beta.clone());
-            val.score += (double) Util.numPossibleWins(node, column)[0] / 5;  
+            int numWins[] = Util.numPossibleWins(node, column);
+            val.score += (double)numWins[0] / 10;  
+            val.score -= (double)numWins[1] / 10;  
             node.removePiece(column);       
             if(val.score > alpha.score){
                 alpha.column = column;
@@ -116,7 +118,9 @@ public class Jarvis {
             lastMove.gamePiece = Util.gamePiece_g;
             lastMove.column = column;            
             val = min(node, depth, lastMove, alpha.clone(), beta.clone());
-            val.score += (double) Util.numPossibleWins(node, column)[0] / 5;  
+            numWins = Util.numPossibleWins(node, column);
+            val.score += (double)numWins[0] / 10;  
+            val.score -= (double)numWins[1] / 10;  
             node.removePiece(column);        
             if(val.score > alpha.score){
                 alpha.column = column;
@@ -164,7 +168,9 @@ public class Jarvis {
             lastMove.gamePiece = Util.gamePiece_r;
             lastMove.column = column;            
             val = max(node, depth, lastMove, alpha.clone(), beta.clone());
-            val.score += (double) Util.numPossibleWins(node, column)[0] / 5;  
+            int numWins[] = Util.numPossibleWins(node, column);
+            val.score += (double)numWins[0] / 10;  
+            val.score -= (double)numWins[1] / 10;  
             node.removePiece(column);            
             if(val.score < beta.score){
                 beta.column = column;
@@ -180,7 +186,9 @@ public class Jarvis {
             lastMove.gamePiece = Util.gamePiece_g;
             lastMove.column = column;            
             val = max(node, depth, lastMove, alpha.clone(), beta.clone());
-            val.score += (double) Util.numPossibleWins(node, column)[0] / 5;  
+            numWins = Util.numPossibleWins(node, column);
+            val.score += (double)numWins[0] / 10;  
+            val.score -= (double)numWins[1] / 10;  
             node.removePiece(column);           
             if(val.score < beta.score){
                 beta.column = column;
@@ -242,10 +250,12 @@ public class Jarvis {
 
             print("Piece: " + Util.gamePiece_b + "  Column: " + (column+1) + "  Unadjusted: " + move.score + "  Adjusted: ");  
             //Give higher weighting to central columns. Will add maximum of 0.5 score
-            double score = move.score + 1/(Math.exp(Math.pow(column - Util.gameWidth/2,2)))/2;  
+            //double score = move.score + 1/(Math.exp(Math.pow(column - Util.gameWidth/2,2)))/2;  
+            double score = move.score + 1/(Math.abs((double) column - Util.gameWidth/2) + 1) / 2;
             score += (double) Util.numPossibleWins(gameTree, column)[0] / 5;       
             gameTree.removePiece(column);            
-            println(score);            
+            println(score);   
+            
             if(score > highscore){
                 bestMove.gamePiece = Util.gamePiece_b;
                 bestMove.column = column;
@@ -260,7 +270,8 @@ public class Jarvis {
 
             print("Piece: " + Util.gamePiece_g + "  Column: " + (column+1) + "  Unadjusted: " + move.score + "  Adjusted: ");
             //Give higher weighting to central columns. Will add maximum of 0.5 score
-            score = move.score + 1/(Math.exp(Math.pow(column - Util.gameWidth/2,2)))/2;       
+            //score = move.score + 1/(Math.exp(Math.pow(column - Util.gameWidth/2,2)))/2;  
+            score = move.score + 1/(Math.abs((double) column - Util.gameWidth/2) + 1) / 2;
             score += (double) Util.numPossibleWins(gameTree, column)[0] / 5;  
             gameTree.removePiece(column);       
             println(score);      
@@ -319,7 +330,7 @@ public class Jarvis {
     public static class Move implements Cloneable{
         int column = 0;
         byte gamePiece;
-        int score = 0;
+        double score = 0;
         public Move(){};
         public Move(GameNode gameNode) {
             column = gameNode.column;
@@ -329,11 +340,11 @@ public class Jarvis {
             column = col;
             gamePiece = gamepiece;
         }
-        public Move(int col, int score) {
+        public Move(int col, double score) {
             column = col;
             this.score = score;
         }
-        public Move(int col, int score, byte gamePiece){
+        public Move(int col, double score, byte gamePiece){
             column = col;
             this.score = score;
             this.gamePiece = gamePiece;
