@@ -95,7 +95,7 @@ public class IsWin {
         lowScore = (lowScore > score) ? score : lowScore;
         
         //possibleWins[9] = new Byte[] { gameBoard[x + 1][y + 5], gameBoard[x + 2][y + 4], gameBoard[x + 3][y + 3], gameBoard[x + 4][y + 2] };
-        score = Util.winMap[gameBoard[x + 1][y + 5] << 6 | gameBoard[x + 2][y + 4] << 4 | gameBoard[x + 1][y + 3] << 2 | gameBoard[x + 4][y + 2]];
+        score = Util.winMap[gameBoard[x + 1][y + 5] << 6 | gameBoard[x + 2][y + 4] << 4 | gameBoard[x + 3][y + 3] << 2 | gameBoard[x + 4][y + 2]];
         totalScore += score;
         highScore = (highScore < score) ? score : highScore;
         lowScore = (lowScore > score) ? score : lowScore;

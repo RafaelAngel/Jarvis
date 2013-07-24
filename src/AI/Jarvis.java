@@ -21,6 +21,9 @@ public class Jarvis {
      */
     public static int gameDepth = 5;
     
+    public static int possibleWinWeighting = 100;
+    public static int columnWeighting = 3;
+    
     private static IsWin isWin;
     
     public static void main(String[] args) {
@@ -101,8 +104,8 @@ public class Jarvis {
             lastMove.column = column;            
             val = min(node, depth, lastMove, alpha.clone(), beta.clone());
             int numWins[] = Util.numPossibleWins(node, column);
-            val.score += (double)numWins[0] / 10;  
-            val.score -= (double)numWins[1] / 10;  
+            val.score += (double)numWins[0] / possibleWinWeighting;  
+            val.score -= (double)numWins[1] / possibleWinWeighting;  
             node.removePiece(column);       
             if(val.score > alpha.score){
                 alpha.column = column;
@@ -119,8 +122,8 @@ public class Jarvis {
             lastMove.column = column;            
             val = min(node, depth, lastMove, alpha.clone(), beta.clone());
             numWins = Util.numPossibleWins(node, column);
-            val.score += (double)numWins[0] / 10;  
-            val.score -= (double)numWins[1] / 10;  
+            val.score += (double)numWins[0] / possibleWinWeighting;  
+            val.score -= (double)numWins[1] / possibleWinWeighting;  
             node.removePiece(column);        
             if(val.score > alpha.score){
                 alpha.column = column;
@@ -169,8 +172,8 @@ public class Jarvis {
             lastMove.column = column;            
             val = max(node, depth, lastMove, alpha.clone(), beta.clone());
             int numWins[] = Util.numPossibleWins(node, column);
-            val.score += (double)numWins[0] / 10;  
-            val.score -= (double)numWins[1] / 10;  
+            val.score += (double)numWins[0] / possibleWinWeighting;  
+            val.score -= (double)numWins[1] / possibleWinWeighting;  
             node.removePiece(column);            
             if(val.score < beta.score){
                 beta.column = column;
@@ -187,8 +190,8 @@ public class Jarvis {
             lastMove.column = column;            
             val = max(node, depth, lastMove, alpha.clone(), beta.clone());
             numWins = Util.numPossibleWins(node, column);
-            val.score += (double)numWins[0] / 10;  
-            val.score -= (double)numWins[1] / 10;  
+            val.score += (double)numWins[0] / possibleWinWeighting;  
+            val.score -= (double)numWins[1] / possibleWinWeighting;  
             node.removePiece(column);           
             if(val.score < beta.score){
                 beta.column = column;
@@ -250,9 +253,8 @@ public class Jarvis {
 
             print("Piece: " + Util.gamePiece_b + "  Column: " + (column+1) + "  Unadjusted: " + move.score + "  Adjusted: ");  
             //Give higher weighting to central columns. Will add maximum of 0.5 score
-            //double score = move.score + 1/(Math.exp(Math.pow(column - Util.gameWidth/2,2)))/2;  
-            double score = move.score + 1/(Math.abs((double) column - Util.gameWidth/2) + 1) / 2;
-            score += (double) Util.numPossibleWins(gameTree, column)[0] / 5;       
+            double score = move.score + 1/(Math.abs((double) column - Util.gameWidth/2) + 1) / columnWeighting;
+            score += (double) Util.numPossibleWins(gameTree, column)[0] / possibleWinWeighting;       
             gameTree.removePiece(column);            
             println(score);   
             
@@ -270,9 +272,8 @@ public class Jarvis {
 
             print("Piece: " + Util.gamePiece_g + "  Column: " + (column+1) + "  Unadjusted: " + move.score + "  Adjusted: ");
             //Give higher weighting to central columns. Will add maximum of 0.5 score
-            //score = move.score + 1/(Math.exp(Math.pow(column - Util.gameWidth/2,2)))/2;  
-            score = move.score + 1/(Math.abs((double) column - Util.gameWidth/2) + 1) / 2;
-            score += (double) Util.numPossibleWins(gameTree, column)[0] / 5;  
+            score = move.score + 1/(Math.abs((double) column - Util.gameWidth/2) + 1) / columnWeighting;
+            score += (double) Util.numPossibleWins(gameTree, column)[0] / possibleWinWeighting;  
             gameTree.removePiece(column);       
             println(score);      
             
