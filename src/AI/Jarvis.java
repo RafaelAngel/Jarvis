@@ -1,5 +1,6 @@
 //package AI;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
@@ -23,6 +24,7 @@ public class Jarvis {
     
     public static int possibleWinWeighting = 100;
     public static int columnWeighting = 3;
+    public static int heightWeighting = 6;
     
     private static IsWin isWin;
     
@@ -251,12 +253,19 @@ public class Jarvis {
             gameTree.insertPiece(column, Util.gamePiece_b);
             move = min(gameTree, gameDepth, lastMove, new Move(0, Integer.MIN_VALUE, Util.gamePiece_b), new Move(0, Integer.MAX_VALUE, Util.gamePiece_r)); 
 
-            print("Piece: " + Util.gamePiece_b + "  Column: " + (column+1) + "  Unadjusted: " + move.score + "  Adjusted: ");  
-            //Give higher weighting to central columns. Will add maximum of 0.5 score
+            print("Piece: " + Util.gamePiece_b + "  Column: " + (column+1) + "  Unadjusted: " + round(move.score,2) + " ");  
+
             double score = move.score + 1/(Math.abs((double) column - Util.gameWidth/2) + 1) / columnWeighting;
-            score += (double) Util.numPossibleWins(gameTree, column)[0] / possibleWinWeighting;       
+            print("columnWeight adjusted: " + round(score,2) + " ");
+            
+            score += (double) Util.numPossibleWins(gameTree, column)[0] / possibleWinWeighting;   
+            print("possibleWin adjusted: " + round(score,2) + " "); 
+
+            score += 1 / (double) (gameTree.tops[column] + 1) / heightWeighting;
+            print("heightWeight adjusted: " + round(score,2) + " ");
+            
             gameTree.removePiece(column);            
-            println(score);   
+            println("final score: " + score);   
             
             if(score > highscore){
                 bestMove.gamePiece = Util.gamePiece_b;
@@ -270,12 +279,19 @@ public class Jarvis {
             gameTree.insertPiece(column, Util.gamePiece_g);
             move = min(gameTree, gameDepth, lastMove, new Move(0, Integer.MIN_VALUE, Util.gamePiece_b), new Move(0, Integer.MAX_VALUE, Util.gamePiece_r));     
 
-            print("Piece: " + Util.gamePiece_g + "  Column: " + (column+1) + "  Unadjusted: " + move.score + "  Adjusted: ");
-            //Give higher weighting to central columns. Will add maximum of 0.5 score
+            print("Piece: " + Util.gamePiece_g + "  Column: " + (column+1) + "  Unadjusted: " + round(move.score,2) + " ");
+            
             score = move.score + 1/(Math.abs((double) column - Util.gameWidth/2) + 1) / columnWeighting;
+            print("columnWeight adjusted: " + round(score,2) + " ");
+            
             score += (double) Util.numPossibleWins(gameTree, column)[0] / possibleWinWeighting;  
-            gameTree.removePiece(column);       
-            println(score);      
+            print("possibleWin adjusted: " + round(score,2) + " ");
+            
+            score += 1 / (double) (gameTree.tops[column] + 1) / heightWeighting;
+            print("heightWeight adjusted: " + round(score,2) + " ");
+            
+            gameTree.removePiece(column);           
+            println("final score: " + score);   
             
             if(score > highscore){
                 bestMove.gamePiece = Util.gamePiece_g;
@@ -289,7 +305,15 @@ public class Jarvis {
         
         return bestMove;        
     }    
+    
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
 
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, BigDecimal.ROUND_HALF_UP);
+        return bd.doubleValue();
+    }
+    
     private static GameTree createGameTree(String input){
         
         StringTokenizer tokenizer = new StringTokenizer(input, ",");
