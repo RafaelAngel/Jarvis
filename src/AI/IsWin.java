@@ -1,4 +1,4 @@
-//package AI;
+package AI;
 
 import java.util.Map;
 import java.util.Map.Entry;

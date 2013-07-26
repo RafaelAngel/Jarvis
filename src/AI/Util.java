@@ -1,4 +1,4 @@
-//package AI;
+package AI;
 
 /*
 * non-blocking console input courtesy of http://www.darkcoding.net/software/non-blocking-console-io-is-not-possible/
@@ -335,8 +335,7 @@ public final class Util {
                 
             }
        
-        }
-        
+        }        
         
         return numWins;
     }

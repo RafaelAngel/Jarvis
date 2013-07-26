@@ -1,4 +1,4 @@
-//package AI;
+package AI;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -21,6 +21,7 @@ public class Jarvis {
      * Number of moves Jarvis looks into the "future"
      */
     public static int gameDepth = 5;
+    public static int numNodes = 0; //counts nodes searched, for funsies
     
     public static int possibleWinWeighting = 100;
     public static int columnWeighting = 3;
@@ -41,16 +42,17 @@ public class Jarvis {
         long startTime = System.currentTimeMillis();
         Move winningMove;
 
-        System.err.println("Looking at depth: " + (gameDepth + 2));
+        System.err.println("Looking at depth: " + (gameDepth));
         
         for(;;){
             winningMove = findOptimalMove(gameTree);
             long taken = System.currentTimeMillis() - startTime;
-            if(taken > 1200 || gameTree.pieceCount < 4 || gameDepth > (num_col*num_row - gameTree.pieceCount)){
+            if(taken > 3000 || gameTree.pieceCount < 4 || gameDepth > (num_col*num_row - gameTree.pieceCount)){
                 break;
             }
             gameDepth++;
-            System.err.println("Looking deeper: " + (gameDepth + 2));
+            System.err.println("Looking deeper: " + gameDepth);
+            numNodes = 0;
         }
         
         System.out.println("(" + (winningMove.column + 1) + "," + Util.getKeyByValue(Util.pieceMap, winningMove.gamePiece) + ")");    
@@ -78,7 +80,8 @@ public class Jarvis {
         }
     }
 
-    private static Move max(GameTree node, int depth, Move lastMove, Move alpha, Move beta){    
+    private static Move max(GameTree node, int depth, Move lastMove, Move alpha, Move beta){ 
+        numNodes+=2;
         if(lastMove == null){
             lastMove = new Move();
         }else{
@@ -96,8 +99,15 @@ public class Jarvis {
         Move val;
         depth = depth - 1;
         
-        for(int column = 0; column < node.boardWidth; column++){
+        int column = node.boardWidth / 2 - 1;
+        for(int count = 1; count <= node.boardWidth; count++){
+        //for(int column = 0; column < node.boardWidth; column++){
             if(node.tops[column] == node.boardHeight) {
+                if(count%2 > 0){
+                    column += count; 
+                }else{
+                    column -= count;
+                }
                 continue;
             }
             
@@ -126,6 +136,9 @@ public class Jarvis {
             numWins = Util.numPossibleWins(node, column);
             val.score += (double)numWins[0] / possibleWinWeighting;  
             val.score -= (double)numWins[1] / possibleWinWeighting;  
+            //Negative weighting to green pieces
+            val.score -= 0.05;
+            
             node.removePiece(column);        
             if(val.score > alpha.score){
                 alpha.column = column;
@@ -135,10 +148,14 @@ public class Jarvis {
 
             if(alpha.score >= beta.score){
                 return alpha;
+            }            
+            
+            if(count%2 > 0){
+                column += count; 
+            }else{
+                column -= count;
             }
         }
-        
-        
         
         if(alpha.score == Integer.MIN_VALUE){
             alpha.score = 0;
@@ -146,7 +163,8 @@ public class Jarvis {
         return alpha;
     }
     
-    private static Move min(GameTree node, int depth, Move lastMove, Move alpha, Move beta){        
+    private static Move min(GameTree node, int depth, Move lastMove, Move alpha, Move beta){ 
+        numNodes+=2;
         if(lastMove == null){
             lastMove = new Move();
         }else{
@@ -164,8 +182,15 @@ public class Jarvis {
         Move val;
         depth = depth - 1;
         
-        for(int column = 0; column < node.boardWidth; column++){
+        int column = node.boardWidth / 2 - 1;
+        for(int count = 1; count <= node.boardWidth; count++){
+        //for(int column = 0; column < node.boardWidth; column++){
             if(node.tops[column] == node.boardHeight) {
+                if(count%2 > 0){
+                    column += count; 
+                }else{
+                    column -= count;
+                }
                 continue;
             }
             
@@ -203,6 +228,12 @@ public class Jarvis {
 
             if(alpha.score >= beta.score){
                 return beta;
+            }
+
+            if(count%2 > 0){
+                column += count; 
+            }else{
+                column -= count;
             }
         }
 
@@ -242,8 +273,16 @@ public class Jarvis {
         Move bestMove = new Move();        
         //bestMove = max(gameTree, gameDepth, null, new Move(0, Integer.MIN_VALUE, Util.gamePiece_b), new Move(0, Integer.MAX_VALUE, Util.gamePiece_r));
         
-        for(int column = 0; column < gameTree.boardWidth; column++){
+        int column = gameTree.boardWidth / 2 - 1;
+        for(int count = 1; count <= gameTree.boardWidth; count++){
+        //for(int column = 0; column < gameTree.boardWidth; column++){
+            numNodes+=2;
             if(gameTree.tops[column] == gameTree.boardHeight) {
+                if(count%2 > 0){
+                    column += count; 
+                }else{
+                    column -= count;
+                }
                 continue;
             }
             
@@ -253,16 +292,20 @@ public class Jarvis {
             gameTree.insertPiece(column, Util.gamePiece_b);
             move = min(gameTree, gameDepth, lastMove, new Move(0, Integer.MIN_VALUE, Util.gamePiece_b), new Move(0, Integer.MAX_VALUE, Util.gamePiece_r)); 
 
-            print("Piece: " + Util.gamePiece_b + "  Column: " + (column+1) + "  Unadjusted: " + round(move.score,2) + " ");  
+            //========================== HEURISTICS ==========================/
+            print("Piece: " + Util.gamePiece_b + "  Column: " + (column+1) + "  Unadjusted: " + round(move.score,3) + " ");  
 
             double score = move.score + 1/(Math.abs((double) column - Util.gameWidth/2) + 1) / columnWeighting;
-            print("columnWeight adjusted: " + round(score,2) + " ");
+            print("columnWeight adjusted: " + round(score,3) + " ");
             
-            score += (double) Util.numPossibleWins(gameTree, column)[0] / possibleWinWeighting;   
-            print("possibleWin adjusted: " + round(score,2) + " "); 
+            int[] possibleWins = Util.numPossibleWins(gameTree, column);
+            score += (double) possibleWins[0] / possibleWinWeighting;   
+            score -= (double) possibleWins[1] / possibleWinWeighting;   
+            print("possibleWin adjusted: " + round(score,3) + " "); 
 
             score += 1 / (double) (gameTree.tops[column] + 1) / heightWeighting;
-            print("heightWeight adjusted: " + round(score,2) + " ");
+            print("heightWeight adjusted: " + round(score,3) + " ");
+            //========================== HEURISTICS ==========================/
             
             gameTree.removePiece(column);            
             println("final score: " + score);   
@@ -279,16 +322,23 @@ public class Jarvis {
             gameTree.insertPiece(column, Util.gamePiece_g);
             move = min(gameTree, gameDepth, lastMove, new Move(0, Integer.MIN_VALUE, Util.gamePiece_b), new Move(0, Integer.MAX_VALUE, Util.gamePiece_r));     
 
-            print("Piece: " + Util.gamePiece_g + "  Column: " + (column+1) + "  Unadjusted: " + round(move.score,2) + " ");
+            //========================== HEURISTICS ==========================/
+            print("Piece: " + Util.gamePiece_g + "  Column: " + (column+1) + "  Unadjusted: " + round(move.score,3) + " ");
             
             score = move.score + 1/(Math.abs((double) column - Util.gameWidth/2) + 1) / columnWeighting;
-            print("columnWeight adjusted: " + round(score,2) + " ");
+            print("columnWeight adjusted: " + round(score,3) + " ");
             
-            score += (double) Util.numPossibleWins(gameTree, column)[0] / possibleWinWeighting;  
-            print("possibleWin adjusted: " + round(score,2) + " ");
+            possibleWins = Util.numPossibleWins(gameTree, column);
+            score += (double) possibleWins[0] / possibleWinWeighting;  
+            score -= (double) possibleWins[1] / possibleWinWeighting;   
+            print("possibleWin adjusted: " + round(score,3) + " ");
             
             score += 1 / (double) (gameTree.tops[column] + 1) / heightWeighting;
-            print("heightWeight adjusted: " + round(score,2) + " ");
+            print("heightWeight adjusted: " + round(score,3) + " ");
+            
+            //Negative weighting to green pieces
+            score -= 0.05;
+            //========================== HEURISTICS ==========================/
             
             gameTree.removePiece(column);           
             println("final score: " + score);   
@@ -299,9 +349,16 @@ public class Jarvis {
                 bestMove.score = move.score;
                 highscore = score;             
             }
+
+            if(count%2 > 0){
+                column += count; 
+            }else{
+                column -= count;
+            }
         }
         
         println("Winning move - Piece: " + bestMove.gamePiece + "  Column: " + (bestMove.column+1) + "  Score: " + bestMove.score);    
+        println("Number of nodes searched: " + numNodes);
         
         return bestMove;        
     }    
