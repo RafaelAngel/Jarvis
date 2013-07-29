@@ -26,6 +26,7 @@ public class Jarvis {
     public static int possibleWinWeighting = 100;
     public static int columnWeighting = 3;
     public static int heightWeighting = 6;
+    public static double greenWeighting = 0.5;
     
     private static IsWin isWin;
     
@@ -137,7 +138,7 @@ public class Jarvis {
             val.score += (double)numWins[0] / possibleWinWeighting;  
             val.score -= (double)numWins[1] / possibleWinWeighting;  
             //Negative weighting to green pieces
-            val.score -= 0.05;
+            val.score -= greenWeighting;
             
             node.removePiece(column);        
             if(val.score > alpha.score){
@@ -337,7 +338,7 @@ public class Jarvis {
             print("heightWeight adjusted: " + round(score,3) + " ");
             
             //Negative weighting to green pieces
-            score -= 0.05;
+            score -= greenWeighting;
             //========================== HEURISTICS ==========================/
             
             gameTree.removePiece(column);           
